@@ -14,23 +14,25 @@ pub fn setup(ctx: &Context) {
 	let mut fonts = FontDefinitions::default();
 
 	if let Some(font_id) = style.text_styles.get_mut(&TextStyle::Heading) {
-		font_id.size = 34_f32;
+		font_id.size = 30_f32;
 	}
 
 	if let Some(font_id) = style.text_styles.get_mut(&TextStyle::Body) {
-		font_id.size = 24_f32;
+		font_id.size = 20_f32;
 	}
 	if let Some(font_id) = style.text_styles.get_mut(&TextStyle::Button) {
-		font_id.size = 26_f32;
+		font_id.size = 20_f32;
 	}
 
 	if let Some(font_id) = style.text_styles.get_mut(&TextStyle::Monospace) {
-		font_id.size = 22_f32;
+		font_id.size = 20_f32;
 	}
 
 	if let Some(font_id) = style.text_styles.get_mut(&TextStyle::Small) {
-		font_id.size = 16_f32;
+		font_id.size = 14_f32;
 	}
+
+	ctx.set_style(style);
 
 	fonts.font_data.insert(
 		"raleway".to_owned(),

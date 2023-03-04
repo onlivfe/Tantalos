@@ -17,6 +17,7 @@ publish = false
 onlivfe = { path = "../core/onlivfe" }
 onlivfe_wrapper = { path = "../core/onlivfe_wrapper" }
 onlivfe_cache_store = { path = "../core/onlivfe_cache_store" }
+strum = { version = "0.24.1" }
 
 [dependencies.tokio]
 version = "1"
@@ -25,7 +26,7 @@ features = ["full"]
 [dependencies.eframe]
 version = "0.21"
 default-features = false
-features = ["wgpu"]
+features = ["glow", "dark-light"]
 
 [target.'cfg(target_os = "windows")'.build-dependencies]
 winres = "0.1.12"

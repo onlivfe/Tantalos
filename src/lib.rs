@@ -14,12 +14,40 @@
 // Not much can be done about it :/
 #![allow(clippy::multiple_crate_versions)]
 
+use std::sync::Arc;
+
 pub mod about;
 pub mod add_account;
 pub mod app;
 pub mod dash;
 pub mod fonts;
 pub mod settings;
+
+pub enum Page {
+	About(crate::about::Page),
+	Settings(crate::settings::Page),
+	AddAccount(crate::add_account::Page),
+	Dash(crate::dash::Page),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+/// How the page should get added to history
+pub enum HistoryBehavior {
+	/// Skips adding the page to history
+	Skip,
+	/// Add the page to history normally
+	Add,
+	/// Clear all of the history before the page
+	Overwrite,
+}
+
+trait UpdatablePage {
+	/// A page that can be rendered, or as egui calls it, updated.
+	fn update<Store: onlivfe::storage::OnlivfeStore + 'static>(
+		&mut self, ui: &mut eframe::egui::Ui, ctx: &eframe::egui::Context,
+		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
+	) -> Option<(crate::Page, HistoryBehavior)>;
+}
 
 /// Starts the application
 ///
