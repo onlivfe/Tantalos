@@ -1,6 +1,6 @@
 # Onlivfe app_rs
 
-A rust-native [onlivfe app](https://onlivfe.com) built using [egui](https://github.com/emilk/egui), working as a more trimmed down & lightweight alternative to the [onlivfe desktop app](https://github.com/onlivfe/desktop) that's built with web technologies & [tauri](https://tauri.app).
+A rust-native [onlivfe app](https://onlivfe.com) built using [egui](https://github.com/emilk/egui), working as a more trimmed down, lightweight, and ugly alternative to the [full onlivfe desktop app](https://github.com/onlivfe/desktop) that's built with web technologies & [tauri](https://tauri.app).
 
 Also note that the license is [AGPL](https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0)).
 
