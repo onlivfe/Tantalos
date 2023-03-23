@@ -14,6 +14,7 @@ pub struct Onlivfe<Store: OnlivfeStore> {
 
 impl<Store: OnlivfeStore> Onlivfe<Store> {
 	/// Creates a new onlivfe app
+	#[must_use]
 	pub fn new(
 		creation_ctx: &eframe::CreationContext<'_>,
 		interface: onlivfe_wrapper::Onlivfe<Store>,

@@ -54,7 +54,8 @@ trait UpdatablePage {
 /// # Errors
 ///
 /// If the app encountered an error whilst starting or running
-pub fn start() -> Result<(), Box<dyn std::error::Error>> {
+#[tokio::main]
+pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
 	let store = onlivfe_cache_store::OnlivfeCacheStorageBackend::new("app_rs")?;
 	let interface = onlivfe_wrapper::Onlivfe::new(store)?;
 

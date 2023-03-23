@@ -1,5 +1,5 @@
 [package]
-name = "onlivfe_app"
+name = "app"
 version = "0.1.0"
 description = "Onlivfe's Rust native app"
 authors = ["ljoonal"]
@@ -10,6 +10,13 @@ categories = ["games"]
 keywords = ["onlivfe", "social_vr", "social_platform", "social_network", "social"]
 edition = "2021"
 publish = false
+
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[[bin]]
+name = "onlivfe_app"
+path = "src/main.rs"
 
 [features]
 

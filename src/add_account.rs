@@ -11,6 +11,7 @@ impl From<Page> for crate::Page {
 }
 
 impl Page {
+	#[must_use]
 	pub fn new<Store: onlivfe::storage::OnlivfeStore + 'static>(
 		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
 	) -> Self {

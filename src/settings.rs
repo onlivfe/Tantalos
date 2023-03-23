@@ -15,6 +15,7 @@ impl From<Page> for crate::Page {
 }
 
 impl Page {
+	#[must_use]
 	pub fn new<Store: onlivfe::storage::OnlivfeStore + 'static>(
 		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
 	) -> Self {
@@ -22,6 +23,7 @@ impl Page {
 		let page = Self { data: data.clone() };
 
 		tokio::spawn(async move {
+			// TODO: Proper parallel
 			for platform in PlatformType::iter() {
 				if i.check_auth(platform).await.is_ok() {
 					data.lock().push(platform);
@@ -40,14 +42,18 @@ impl UpdatablePage for Page {
 	) -> Option<(crate::Page, HistoryBehavior)> {
 		ui.heading("Settings");
 		let mut any_missing_auth = false;
-		for platform in PlatformType::iter() {
-			if self.data.lock().contains(&platform) {
-				ui.label("Authenticated on ".to_owned() + platform.as_ref());
-			} else {
-				any_missing_auth = true;
-				ui.label("Not authenticated on ".to_owned() + platform.as_ref());
+		{
+			let data = self.data.lock();
+			for platform in PlatformType::iter() {
+				if data.contains(&platform) {
+					ui.label("Authenticated on ".to_owned() + platform.as_ref());
+				} else {
+					any_missing_auth = true;
+					ui.label("Not authenticated on ".to_owned() + platform.as_ref());
+				}
 			}
 		}
+
 		if any_missing_auth && ui.button("Authenticate an account").clicked() {
 			return Some((
 				crate::add_account::Page::new(i).into(),
