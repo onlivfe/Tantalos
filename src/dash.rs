@@ -8,7 +8,7 @@ use crate::{HistoryBehavior, UpdatablePage};
 pub enum Page {
 	Loading,
 }
-impl From<Page> for crate::Page {
+impl<Store: onlivfe::storage::OnlivfeStore + 'static> From<Page> for crate::Page<Store> {
 	fn from(value: Page) -> Self { Self::Dash(value) }
 }
 
@@ -16,11 +16,13 @@ impl Default for Page {
 	fn default() -> Self { Self::Loading }
 }
 
-impl UpdatablePage for Page {
-	fn update<Store: onlivfe::storage::OnlivfeStore>(
-		&mut self, ui: &mut Ui, ctx: &eframe::egui::Context,
-		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
-	) -> Option<(crate::Page, HistoryBehavior)> {
+impl<Store: onlivfe::storage::OnlivfeStore + 'static> UpdatablePage<Store>
+	for Page
+{
+	fn update(
+		&mut self, ui: &mut Ui, _ctx: &eframe::egui::Context,
+		_i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
+	) -> Option<(crate::Page<Store>, HistoryBehavior)> {
 		ui.heading("Dash");
 
 		None

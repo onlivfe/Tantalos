@@ -10,7 +10,7 @@ pub struct Page {
 	/// Non-UI thread needs to drop lock as quickly as possible
 	data: Arc<Mutex<Vec<PlatformType>>>,
 }
-impl From<Page> for crate::Page {
+impl<Store: onlivfe::storage::OnlivfeStore + 'static> From<Page> for crate::Page<Store> {
 	fn from(value: Page) -> Self { Self::Settings(value) }
 }
 
@@ -35,11 +35,13 @@ impl Page {
 	}
 }
 
-impl UpdatablePage for Page {
-	fn update<Store: onlivfe::storage::OnlivfeStore + 'static>(
-		&mut self, ui: &mut Ui, ctx: &eframe::egui::Context,
+impl<Store: onlivfe::storage::OnlivfeStore + 'static> UpdatablePage<Store>
+	for Page
+{
+	fn update(
+		&mut self, ui: &mut Ui, _ctx: &eframe::egui::Context,
 		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
-	) -> Option<(crate::Page, HistoryBehavior)> {
+	) -> Option<(crate::Page<Store>, HistoryBehavior)> {
 		ui.heading("Settings");
 		let mut any_missing_auth = false;
 		{

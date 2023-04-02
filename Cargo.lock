@@ -427,7 +427,9 @@ dependencies = [
 
 [[package]]
 name = "chilloutvr"
-version = "0.2.1"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "87c2aba42c57ae92df93d1341527213ef1f417c6ae5088d7922e10176161bbe6"
 dependencies = [
  "async-trait",
  "ezsockets",
@@ -993,9 +995,9 @@ checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
 
 [[package]]
 name = "ezsockets"
-version = "0.4.3"
+version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "695c8167bc1b72e4f398846effc6546fab645f7d9fb76cd47026ff1a685efebb"
+checksum = "68ede010e54c8c6887292598c25d0626d1d58a3ca53d05165242047c0a4300b5"
 dependencies = [
  "async-trait",
  "base64 0.21.0",
@@ -1769,9 +1771,9 @@ dependencies = [
 
 [[package]]
 name = "neos"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a8378e8824aeb0c3073f1993dcb9011b69d7c8b3ed4933608c91ee1eadffda2"
+checksum = "a95a93f66fa57f524b4e07d80f3e8114a7341eaeccac52ec5f5d27ee533c02d1"
 dependencies = [
  "async-trait",
  "governor",
@@ -2571,9 +2573,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with"
-version = "2.2.0"
+version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30d904179146de381af4c93d3af6ca4984b3152db687dacb9c3c35e86f39809c"
+checksum = "85456ffac572dc8826334164f2fb6fb40a7c766aebe195a2a21ee69ee2885ecf"
 dependencies = [
  "base64 0.13.1",
  "chrono",
@@ -2587,9 +2589,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with_macros"
-version = "2.2.0"
+version = "2.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1966009f3c05f095697c537312f5415d1e3ed31ce0a56942bac4c771c5c335e"
+checksum = "7cbcd6104f8a4ab6af7f6be2a0da6be86b9de3c401f6e86bb856ab2af739232f"
 dependencies = [
  "darling",
  "proc-macro2",

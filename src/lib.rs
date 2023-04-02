@@ -23,10 +23,10 @@ pub mod dash;
 pub mod fonts;
 pub mod settings;
 
-pub enum Page {
+pub enum Page<Store: onlivfe::storage::OnlivfeStore + 'static> {
 	About(crate::about::Page),
 	Settings(crate::settings::Page),
-	AddAccount(crate::add_account::Page),
+	AddAccount(crate::add_account::Page<Store>),
 	Dash(crate::dash::Page),
 }
 
@@ -41,12 +41,28 @@ pub enum HistoryBehavior {
 	Overwrite,
 }
 
-trait UpdatablePage {
+trait UpdatablePage<Store: onlivfe::storage::OnlivfeStore + 'static> {
 	/// A page that can be rendered, or as egui calls it, updated.
-	fn update<Store: onlivfe::storage::OnlivfeStore + 'static>(
+	fn update(
 		&mut self, ui: &mut eframe::egui::Ui, ctx: &eframe::egui::Context,
 		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
-	) -> Option<(crate::Page, HistoryBehavior)>;
+	) -> Option<(crate::Page<Store>, HistoryBehavior)>;
+}
+
+impl<Store: onlivfe::storage::OnlivfeStore + 'static> UpdatablePage<Store>
+	for Page<Store>
+{
+	fn update(
+		&mut self, ui: &mut eframe::egui::Ui, ctx: &eframe::egui::Context,
+		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
+	) -> Option<(Self, HistoryBehavior)> {
+		match self {
+			Self::About(page) => page.update(ui, ctx, i),
+			Self::AddAccount(page) => page.update(ui, ctx, i),
+			Self::Dash(page) => page.update(ui, ctx, i),
+			Self::Settings(page) => page.update(ui, ctx, i),
+		}
+	}
 }
 
 /// Starts the application

@@ -1,12 +1,10 @@
 use std::sync::Arc;
 
-use eframe::egui::Ui;
-
 use crate::{HistoryBehavior, UpdatablePage};
 
 #[derive(Debug, Clone)]
 pub struct Page;
-impl From<Page> for crate::Page {
+impl<Store: onlivfe::storage::OnlivfeStore + 'static> From<Page> for crate::Page<Store> {
 	fn from(value: Page) -> Self { Self::About(value) }
 }
 
@@ -14,11 +12,11 @@ impl Default for Page {
 	fn default() -> Self { Self }
 }
 
-impl UpdatablePage for Page {
-	fn update<Store: onlivfe::storage::OnlivfeStore + 'static>(
-		&mut self, ui: &mut eframe::egui::Ui, ctx: &eframe::egui::Context,
-		i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
-	) -> Option<(crate::Page, HistoryBehavior)> {
+impl<Store: onlivfe::storage::OnlivfeStore + 'static> UpdatablePage<Store> for Page {
+	fn update(
+		&mut self, ui: &mut eframe::egui::Ui, _ctx: &eframe::egui::Context,
+		_i: Arc<onlivfe_wrapper::Onlivfe<Store>>,
+	) -> Option<(crate::Page<Store>, HistoryBehavior)> {
 		ui.heading("About");
 
 		None
