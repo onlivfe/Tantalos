@@ -1,0 +1,11 @@
+[package]
+name = "vr-peeps-ui"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[dependencies]
+onlivfe = { workspace = true }
+yew = { version = "0.20.0", features = ["csr"] }
+yew-hooks = "0.2.0"
+tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", features = ["tauri"] }

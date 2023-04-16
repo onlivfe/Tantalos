@@ -1,75 +1,21 @@
-[package]
-name = "app"
-version = "0.1.0"
-description = "Onlivfe's Rust native app"
-authors = ["ljoonal"]
-license = "AGPL-3.0-or-later"
-homepage = "https://onlivfe.com"
-repository = "https://github.com/onlivfe/core"
-categories = ["games"]
-keywords = ["onlivfe", "social_vr", "social_platform", "social_network", "social"]
-edition = "2021"
-publish = false
+[workspace]
+members = [
+	"tauri",
+	"frontend"
+]
 
-[lib]
-crate-type = ["staticlib", "cdylib", "rlib"]
+[workspace.dependencies]
+onlivfe_wrapper = { git = "https://github.com/onlivfe/core.git" }
+# TODO: Move to onlivfe wrapper as re-export
+onlivfe = { git = "https://github.com/onlivfe/core.git", default-features = false }
+# TODO: Move to onlivfe wrapper as re-export as a feature
+onlivfe_cache_store = { git = "https://github.com/onlivfe/core.git" }
 
-[[bin]]
-name = "onlivfe_app"
-path = "src/main.rs"
+# TODO: Move to onlivfe wrapper as re-exports
+neos = "*"
+chilloutvr = "*"
+vrc = "*"
 
-[features]
-
-[dependencies]
-onlivfe = { path = "../core/onlivfe" }
-onlivfe_wrapper = { path = "../core/onlivfe_wrapper" }
-onlivfe_cache_store = { path = "../core/onlivfe_cache_store" }
-strum = { version = "0.24.1" }
-
-[dependencies.tokio]
-version = "1"
-features = ["full"]
-
-[dependencies.eframe]
-version = "0.21"
-default-features = false
-features = ["glow", "dark-light"]
-
-[target.'cfg(target_os = "windows")'.build-dependencies]
-winres = "0.1.12"
-
-[target.'cfg(target_os = "android")'.dependencies]
-winit = { version = "0.28.2", default-features = false, features = ["android-native-activity"] }
-
-[package.metadata.android]
-package = "com.onlivfe"
-apk_name = "android"
-
-[[package.metadata.android.uses_feature]]
-name = "android.hardware.vulkan.level"
-required = true
-version = 1
-
-[[package.metadata.android.uses_permission]]
-name = "android.permission.WRITE_EXTERNAL_STORAGE"
-max_sdk_version = 18
-
-[[package.metadata.android.uses_permission]]
-name = "android.permission.INTERNET"
-
-[package.metadata.android.application]
-label = "Onlivfe"
-
-
-[profile.dev.package."*"]
-# Framerate tanks when loading images without this
-opt-level = 2
-
-
-[profile.release]
-# Optimizing mostly for size.
-opt-level = "s"
-codegen-units = 1
-lto = "fat"
-panic = "abort"
-strip = true
+# Data mangling
+serde = "1"
+serde_json = "1"
