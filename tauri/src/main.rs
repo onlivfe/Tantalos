@@ -30,7 +30,7 @@ fn main() {
 	let interface: Interface = onlivfe_wrapper::Onlivfe::new(store).unwrap();
 	tauri::Builder::default()
 		.manage(interface)
-		.invoke_handler(tauri::generate_handler![authenticated_accounts])
+		.invoke_handler(tauri::generate_handler![authenticated_accounts, login, save_and_exit])
 		.run(tauri::generate_context!())
 		.expect("error while running tauri application");
 }
@@ -52,8 +52,17 @@ async fn authenticated_accounts(
 
 #[tauri::command]
 async fn login(
-	interface: tauri::State<'_, Interface>,
 	credentials: onlivfe::LoginCredentials,
-) -> Option<LoginError> {
-	interface.login(credentials).await.err()
+	interface: tauri::State<'_, Interface>,
+) -> Result<(), LoginError> {
+	interface.login(credentials).await?;
+
+	Ok(())
+}
+
+#[tauri::command]
+fn save_and_exit(window: tauri::Window) -> Result<(), String> {
+	// TODO: Saving?
+	window.close().map_err(|e| e.to_string())?;
+	Ok(())
 }
