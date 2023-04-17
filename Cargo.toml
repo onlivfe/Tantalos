@@ -11,11 +11,6 @@ onlivfe = { git = "https://github.com/onlivfe/core.git", default-features = fals
 # TODO: Move to onlivfe wrapper as re-export as a feature
 onlivfe_cache_store = { git = "https://github.com/onlivfe/core.git" }
 
-# TODO: Move to onlivfe wrapper as re-exports
-neos = "*"
-chilloutvr = "*"
-vrc = "*"
-
 # Data mangling
 serde = "1"
 serde_json = "1"

@@ -5,7 +5,13 @@ public_url = "/"
 filehash = true
 
 [watch]
-watch = []
+watch = [
+	"./res",
+	"./frontend",
+	"./Cargo.toml",
+	"./Cargo.lock",
+	"./Trunk.toml"
+]
 ignore = ["./tauri"]
 
 [serve]

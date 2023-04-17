@@ -21,5 +21,5 @@ Start off by cloning the project with git.
 git clone https://github.com/onlivfe/app_rs
 ```
 
-Then open the project folder in your terminal, & run `cargo tauri dev`.
+Then open the project folder in your terminal, & run `cargo tauri dev` for the whole build, or `trunk serve` for just the UI.
 Then get to hacking, & optionally replace the dependency in other projects by [overriding dependencies](https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html).

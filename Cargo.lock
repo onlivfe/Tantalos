@@ -421,9 +421,9 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chilloutvr"
-version = "0.3.1"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4a8af04d663fafa7905dbfbe5a0993c1b4c789e3720a52ddb6dfffb510202423"
+checksum = "a37c5d2ebb3e6c2a2c79ff43ef1573eb4be262a66f9759b57c3b8ad2daff14ec"
 dependencies = [
  "async-trait",
  "ezsockets",
@@ -2241,9 +2241,9 @@ dependencies = [
 
 [[package]]
 name = "neos"
-version = "0.6.3"
+version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cfc9c410cbdcc1b2cbd1a239dd32f40503a4a2f32e0a8896c404548812d8393"
+checksum = "3c5bcc5c97271066c44eb93eabfb2106ddda25f42f48149e3a5425a8bcbaa6dc"
 dependencies = [
  "async-trait",
  "governor",
@@ -2398,7 +2398,7 @@ checksum = "b7e5500299e16ebb147ae15a00a942af264cf3688f47923b8fc2cd5858f23ad3"
 [[package]]
 name = "onlivfe"
 version = "0.0.0-alpha.0"
-source = "git+https://github.com/onlivfe/core.git#343d9518a3c731db18da8b6c327c719eda4fff61"
+source = "git+https://github.com/onlivfe/core.git#1e02ac2f5fa1cfaf8c5ce91a752afc4f0067545c"
 dependencies = [
  "async-trait",
  "chilloutvr",
@@ -2415,7 +2415,7 @@ dependencies = [
 [[package]]
 name = "onlivfe_cache_store"
 version = "0.0.0-alpha.0"
-source = "git+https://github.com/onlivfe/core.git#343d9518a3c731db18da8b6c327c719eda4fff61"
+source = "git+https://github.com/onlivfe/core.git#1e02ac2f5fa1cfaf8c5ce91a752afc4f0067545c"
 dependencies = [
  "async-trait",
  "bson",
@@ -2430,7 +2430,7 @@ dependencies = [
 [[package]]
 name = "onlivfe_net"
 version = "0.0.0-alpha.0"
-source = "git+https://github.com/onlivfe/core.git#343d9518a3c731db18da8b6c327c719eda4fff61"
+source = "git+https://github.com/onlivfe/core.git#1e02ac2f5fa1cfaf8c5ce91a752afc4f0067545c"
 dependencies = [
  "chilloutvr",
  "neos",
@@ -2445,7 +2445,7 @@ dependencies = [
 [[package]]
 name = "onlivfe_wrapper"
 version = "0.0.0-alpha.0"
-source = "git+https://github.com/onlivfe/core.git#343d9518a3c731db18da8b6c327c719eda4fff61"
+source = "git+https://github.com/onlivfe/core.git#1e02ac2f5fa1cfaf8c5ce91a752afc4f0067545c"
 dependencies = [
  "android_logger",
  "dotenvy",
@@ -3061,9 +3061,9 @@ checksum = "afab94fb28594581f62d981211a9a4d53cc8130bbcbbb89a0440d9b8e81a7746"
 
 [[package]]
 name = "rustc-demangle"
-version = "0.1.22"
+version = "0.1.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4a36c42d1873f9a77c53bde094f9664d9891bc604a45b4798fd2c389ed12e5b"
+checksum = "d626bb9dae77e28219937af045c257c28bfd3f69333c512553507f5f9798cb76"
 
 [[package]]
 name = "rustc_version"
@@ -4300,6 +4300,7 @@ version = "0.0.0"
 dependencies = [
  "onlivfe",
  "tauri-sys",
+ "web-sys",
  "yew",
  "yew-hooks",
  "yew-router",

@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: url(./material-icons.ttf) format('truetype');
+  src: url(./material-icons.ttf) format("truetype");
 }
 
 .icon {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -17,4 +17,25 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+}
+
+ul,
+ol {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul {
+  flex-direction: row;
+}
+
+nav > ul {
+  justify-content: space-between;
+}
+
+nav li {
+  padding: 0.1em 0.25em;
 }

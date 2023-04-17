@@ -108,6 +108,13 @@ pub enum HistoryBehavior {
 	Overwrite,
 }
 
+#[derive(Properties, PartialEq)]
+pub struct TwoWayBindingProps<T: PartialEq> {
+	pub value: T,
+	pub onchange: Callback<T>,
+}
+
+
 #[function_component(App)]
 fn app() -> Html {
 	struct NavLink {
@@ -138,7 +145,7 @@ fn app() -> Html {
 	.map(|subnav| {
 		html! {
 			<li>
-				<ul style="display: flex; list-style: none; margin: 0; padding: 0;">
+				<ul>
 				{
 				subnav
 					.into_iter()
@@ -157,7 +164,7 @@ fn app() -> Html {
 	html! {
 		<BrowserRouter>
 			<nav>
-				<ul style="display: flex; list-style: none; justify-content: space-between; margin: 0; padding: 0;">
+				<ul>
 					{nav_submenus}
 				</ul>
 			</nav>
