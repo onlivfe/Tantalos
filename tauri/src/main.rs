@@ -54,10 +54,8 @@ async fn authenticated_accounts(
 async fn login(
 	credentials: onlivfe::LoginCredentials,
 	interface: tauri::State<'_, Interface>,
-) -> Result<(), LoginError> {
-	interface.login(credentials).await?;
-
-	Ok(())
+) -> Result<Result<PlatformAccountId, LoginError>, ()> {
+	Ok(interface.login(credentials).await)
 }
 
 #[tauri::command]

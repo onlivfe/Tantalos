@@ -5,7 +5,7 @@ use yew_hooks::prelude::*;
 use yew_router::prelude::*;
 
 mod add_account;
-use add_account::*;
+use add_account::AddAccount;
 
 #[derive(Clone, Routable, PartialEq, Eq)]
 pub enum Route {
@@ -18,6 +18,7 @@ pub enum Route {
 	NotFound,
 }
 
+#[allow(clippy::needless_pass_by_value)]
 pub fn switch_route(route: Route) -> Html {
 	match route {
 		Route::Settings => html! {<Settings></Settings>},

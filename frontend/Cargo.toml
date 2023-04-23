@@ -10,4 +10,5 @@ yew = { version = "0.20.0", features = ["csr"] }
 yew-router = "0.17"
 yew-hooks = "0.2.0"
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", features = ["tauri"] }
-web-sys = { version = "0.3.61", features = ["HtmlSelectElement"] }
+web-sys = { version = "0.3.61", features = ["HtmlSelectElement", "HtmlFormElement"] }
+serde = { workspace = true }

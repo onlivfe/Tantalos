@@ -1,7 +1,8 @@
-use onlivfe::{LoginCredentials, PlatformAccount, PlatformType};
+use onlivfe::{LoginCredentials, LoginError, PlatformAccountId, PlatformType};
 use tauri_sys::tauri::invoke;
-use web_sys::{HtmlInputElement, HtmlSelectElement};
+use web_sys::{HtmlFormElement, HtmlInputElement, HtmlSelectElement};
 use yew::prelude::*;
+use yew_hooks::prelude::*;
 
 use crate::TwoWayBindingProps;
 
@@ -62,10 +63,39 @@ pub fn add_account() -> Html {
 		switch_login_credentials_platform(None, PlatformType::VRChat)
 	});
 
-	let on_login = Callback::from(move |ev: SubmitEvent| {
-		// Prevent actual form submission
-		ev.prevent_default();
-	});
+	let login: UseAsyncHandle<PlatformAccountId, LoginError> = {
+		let credentials_state = credentials_state.clone();
+		use_async(async move {
+			#[derive(serde::Serialize)]
+			struct Args<'a> {
+				credentials: &'a LoginCredentials,
+			}
+
+			match invoke::<_, Result<PlatformAccountId, LoginError>>(
+				"login",
+				&Args { credentials: &credentials_state },
+			)
+			.await
+			{
+				Ok(res) => res,
+				Err(e) => Err(LoginError::Error(e.to_string())),
+			}
+		})
+	};
+
+	let on_login = {
+		let login = login.clone();
+		Callback::from(move |event: SubmitEvent| {
+			// Prevent actual form submission
+			event.prevent_default();
+			let form = event.target_unchecked_into::<HtmlFormElement>();
+
+			// Yes we're only doing a client side check, not best practice but meh
+			if form.report_validity() && !login.loading {
+				login.run();
+			}
+		})
+	};
 
 	let on_platform_change = {
 		let credentials_state = credentials_state.clone();
@@ -84,15 +114,43 @@ pub fn add_account() -> Html {
 		})
 	};
 
-	html! {
-		<>
-			<h1>{"Add account"}</h1>
-			<form onsubmit={on_login}>
-				<AccountPlatformSelector value={credentials_state.platform()} onchange={on_platform_change}  />
-				<AccountCredentialsInput value={(*credentials_state).clone()} onchange={on_credentials_change} />
-				<button type="submit">{"Login"}</button>
-			</form>
-		</>
+	if let Some(error) = login.error.as_ref() {
+		match error {
+			LoginError::Error(error) => {
+				html! {
+				<section>
+					<h1>{"Error logging in"}</h1>
+					<details>
+						<summary>{"Details"}</summary>
+						<code>{error}</code>
+					</details>
+				</section>
+			}
+		},
+		LoginError::RequiresAdditionalFactor(id) => {
+				html!{
+					<section>
+					<h1>{"Requires 2FA"}</h1>
+					<details>
+						<code>{"Not implemented yet"}</code>
+					</details>
+				</section>
+				}
+			}
+		}
+	} else {
+		html! {
+			<>
+				<h1>{"Add account"}</h1>
+				<form onsubmit={on_login}>
+					<fieldset disabled={login.loading}>
+						<AccountPlatformSelector value={credentials_state.platform()} onchange={on_platform_change}  />
+						<AccountCredentialsInput value={(*credentials_state).clone()} onchange={on_credentials_change} />
+						<button type="submit">{"Login"}</button>
+					</fieldset>
+				</form>
+			</>
+		}
 	}
 }
 
@@ -206,11 +264,57 @@ fn vrc_account_credentials_input(
 				</>
 			}
 		}
-		LoginRequestPart::SecondFactor(second_factor) => {
-			html! {
-				<>
-					<input required=true type="number" placeholder="2FA" />
-				</>
+		LoginRequestPart::SecondFactor((id, second_factor)) => {
+			use onlivfe::vrchat::query::VerifySecondFactor;
+			match second_factor {
+				VerifySecondFactor::Code(totp) => {
+					let on_totp_change = {
+						let cb = props.onchange.clone();
+						let id = id.clone();
+						Callback::from(move |event: Event| {
+							let input = event.target_unchecked_into::<HtmlInputElement>();
+							cb.emit(LoginRequestPart::SecondFactor((id.clone(), VerifySecondFactor::Code(input.value()))));
+						})
+					};
+
+					html! {
+						<>
+							<input required=true type="number" placeholder="2FA" value={totp.clone()} onchange={on_totp_change} />
+						</>
+					}
+				},
+				VerifySecondFactor::Email(email_otp) => {
+					let on_totp_change = {
+						let cb = props.onchange.clone();
+						let id = id.clone();
+						Callback::from(move |event: Event| {
+							let input = event.target_unchecked_into::<HtmlInputElement>();
+							cb.emit(LoginRequestPart::SecondFactor((id.clone(), VerifySecondFactor::Email(input.value()))));
+						})
+					};
+
+					html! {
+						<>
+							<input required=true type="number" placeholder="Email code" value={email_otp.clone()} onchange={on_totp_change} />
+						</>
+					}
+				},
+				VerifySecondFactor::Recovery(recovery) => {
+					let on_totp_change = {
+						let cb = props.onchange.clone();
+						let id = id.clone();
+						Callback::from(move |event: Event| {
+							let input = event.target_unchecked_into::<HtmlInputElement>();
+							cb.emit(LoginRequestPart::SecondFactor((id.clone(), VerifySecondFactor::Recovery(input.value()))));
+						})
+					};
+
+					html! {
+						<>
+							<input required=true type="number" placeholder="Recovery code" value={recovery.clone()} onchange={on_totp_change} />
+						</>
+					}
+				}
 			}
 		}
 	}
@@ -372,130 +476,3 @@ fn neos_account_credentials_input(
 		</>
 	}
 }
-
-/*
-
-		match &mut self.credentials {
-			LoginCredentials::VRChat(login_req_part) => match &mut **login_req_part {
-				onlivfe::vrchat::LoginRequestPart::LoginRequest(creds) => {
-					ui.add(
-						TextEdit::singleline(&mut creds.username).hint_text("Username"),
-					);
-					ui.add(
-						TextEdit::singleline(&mut creds.password)
-							.password(true)
-							.hint_text("Password"),
-					);
-				}
-				onlivfe::vrchat::LoginRequestPart::SecondFactor(second_factor) => {
-					match second_factor {
-						onlivfe::vrchat::query::VerifySecondFactor::Code(totp) => {
-							ui.add(TextEdit::singleline(totp).hint_text("TOTP"));
-							if ui.button("Use recovery code instead").clicked() {
-								let mut recovery =
-									onlivfe::vrchat::query::VerifySecondFactor::Recovery(
-										String::new(),
-									);
-								std::mem::swap(second_factor, &mut recovery);
-							}
-						}
-						onlivfe::vrchat::query::VerifySecondFactor::Email(email) => {
-							ui.add(TextEdit::singleline(email).hint_text("Email code"));
-						}
-						onlivfe::vrchat::query::VerifySecondFactor::Recovery(recovery) => {
-							ui.add(TextEdit::singleline(recovery).hint_text("Recovery code"));
-						}
-					}
-				}
-			},
-			LoginCredentials::ChilloutVR(creds) => {
-				ui.add(TextEdit::singleline(&mut creds.email).hint_text("Email"));
-				ui.add(
-					TextEdit::singleline(&mut creds.password)
-						.password(true)
-						.hint_text("Password"),
-				);
-			}
-			LoginCredentials::NeosVR(creds) => {
-				neos_identifier_picker(&mut creds.identifier, ui, false);
-				ui.add(
-					TextEdit::singleline(&mut creds.password)
-						.password(true)
-						.hint_text("Password"),
-				);
-			}
-		}
-
-		None
-	}
-}
-
-fn neos_identifier_picker(
-	identifier: &mut onlivfe::neosvr::query::LoginCredentialsIdentifier,
-	ui: &mut Ui, is_loading: bool,
-) {
-	eframe::egui::ComboBox::from_label("Login type")
-		.selected_text(identifier.as_ref())
-		.show_ui(ui, |ui| {
-			if ui
-				.add(SelectableLabel::new(
-					matches!(
-						identifier,
-						onlivfe::neosvr::query::LoginCredentialsIdentifier::Username(_)
-					),
-					"Username",
-				))
-				.clicked()
-			{
-				let mut new_identifier =
-					onlivfe::neosvr::query::LoginCredentialsIdentifier::Username(
-						identifier.inner().into(),
-					);
-				std::mem::swap(identifier, &mut new_identifier);
-			}
-
-			if ui
-				.add(SelectableLabel::new(
-					matches!(
-						identifier,
-						onlivfe::neosvr::query::LoginCredentialsIdentifier::Email(_)
-					),
-					"Email",
-				))
-				.clicked()
-			{
-				let mut new_identifier =
-					onlivfe::neosvr::query::LoginCredentialsIdentifier::Email(
-						identifier.inner().into(),
-					);
-				std::mem::swap(identifier, &mut new_identifier);
-			}
-
-			if ui
-				.add(SelectableLabel::new(
-					matches!(
-						identifier,
-						onlivfe::neosvr::query::LoginCredentialsIdentifier::OwnerID(_)
-					),
-					"OwnerID",
-				))
-				.clicked()
-			{
-				let mut new_identifier =
-					onlivfe::neosvr::query::LoginCredentialsIdentifier::OwnerID(
-						identifier.inner().into(),
-					);
-				std::mem::swap(identifier, &mut new_identifier);
-			}
-		});
-
-	let label = identifier.as_ref().to_string();
-
-	ui.add(
-		TextEdit::singleline(identifier.inner_mut())
-			.hint_text(label)
-			.interactive(!is_loading),
-	);
-}
-
-*/

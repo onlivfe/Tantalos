@@ -44,6 +44,7 @@ enum Route {
 	NotFound,
 }
 
+#[allow(clippy::needless_pass_by_value)]
 fn switch_route(route: Route) -> Html {
 	match route {
 		Route::Peeps => html! {<Peeps/>},
