@@ -30,7 +30,11 @@ fn main() {
 	let interface: Interface = onlivfe_wrapper::Onlivfe::new(store).unwrap();
 	tauri::Builder::default()
 		.manage(interface)
-		.invoke_handler(tauri::generate_handler![authenticated_accounts, login, save_and_exit])
+		.invoke_handler(tauri::generate_handler![
+			authenticated_accounts,
+			login,
+			save_and_exit
+		])
 		.run(tauri::generate_context!())
 		.expect("error while running tauri application");
 }

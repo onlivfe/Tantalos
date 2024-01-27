@@ -1,6 +1,6 @@
-use yew::prelude::*;
+use leptos::*;
 
-#[function_component(Peeps)]
-pub fn peeps() -> Html {
-	html! { <h1>{"Peeps"}</h1> }
+#[component]
+pub fn peeps() -> impl IntoView {
+	view! { <h1>{"Peeps"}</h1> }
 }

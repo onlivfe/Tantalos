@@ -1,6 +1,6 @@
-use yew::prelude::*;
+use leptos::*;
 
-#[function_component(Instances)]
-pub fn instances() -> Html {
-	html! { <h1>{"Instances"}</h1> }
+#[component]
+pub fn instances() -> impl IntoView {
+	view! { <h1>{"Instances"}</h1> }
 }

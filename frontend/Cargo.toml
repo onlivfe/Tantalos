@@ -5,10 +5,13 @@ publish = false
 edition = "2021"
 
 [dependencies]
-onlivfe = { workspace = true }
-yew = { version = "0.20.0", features = ["csr"] }
-yew-router = "0.17"
-yew-hooks = "0.2.0"
+onlivfe = { workspace = true, default-features = false }
+leptos = { version = "0.6.3", features = ["csr"], default-features = false }
+leptos_router = { version = "0.6.3", features = ["csr"], default-features = false }
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", features = ["tauri"] }
-web-sys = { version = "0.3.61", features = ["HtmlSelectElement", "HtmlFormElement"] }
+web-sys = { version = "0.3.67", features = ["HtmlSelectElement", "HtmlFormElement"] }
 serde = { workspace = true }
+
+console_log = "1"
+log = "0.4"
+console_error_panic_hook = "0.1.7"

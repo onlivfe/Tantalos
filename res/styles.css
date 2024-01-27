@@ -1,3 +1,8 @@
+:root {
+  --hiq-body-background-color: black;
+  --hiq-text-color: white;
+}
+
 @font-face {
   font-family: "Material Icons";
   font-style: normal;
@@ -5,7 +10,7 @@
   src: url(./material-icons.ttf) format("truetype");
 }
 
-.icon {
+i.icon {
   font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
@@ -17,6 +22,10 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+}
+
+body {
+  min-height: 100vh;
 }
 
 ul,

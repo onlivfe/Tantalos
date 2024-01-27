@@ -1,15 +1,16 @@
 [workspace]
+resolver = "2"
 members = [
 	"tauri",
 	"frontend"
 ]
 
 [workspace.dependencies]
-onlivfe_wrapper = { git = "https://github.com/onlivfe/core.git" }
+onlivfe_wrapper = { git = "https://github.com/onlivfe/core.git", default-features = false }
 # TODO: Move to onlivfe wrapper as re-export
 onlivfe = { git = "https://github.com/onlivfe/core.git", default-features = false }
 # TODO: Move to onlivfe wrapper as re-export as a feature
-onlivfe_cache_store = { git = "https://github.com/onlivfe/core.git" }
+onlivfe_cache_store = { git = "https://github.com/onlivfe/core.git", default-features = false }
 
 # Data mangling
 serde = "1"

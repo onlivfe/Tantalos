@@ -1,13 +1,7 @@
-use yew::prelude::*;
+use leptos::*;
 
-#[derive(Debug, Clone, PartialEq, Eq, Properties)]
-pub struct IconProps {
-	pub name: String,
-}
-
-#[function_component(Icon)]
-pub fn icon(props: &IconProps) -> Html {
-	html! {
-		<i class="icon">{&props.name}</i>
-	}
+#[component]
+#[must_use]
+pub fn icon(#[prop(into)] name: MaybeSignal<String>) -> impl IntoView {
+	view! { <i class="icon">{name}</i> }
 }

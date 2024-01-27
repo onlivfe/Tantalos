@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/tauri-apps/tauri/dev/tooling/cli/schema.json",
   "build": {
     "beforeBuildCommand": "TRUNK_PROFILE=release trunk build",
     "beforeDevCommand": "TRUNK_PROFILE=debug trunk serve",
@@ -6,38 +7,18 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "VR Peeps",
+    "productName": "Onlivfe",
     "version": "0.1.0"
   },
   "tauri": {
-    "allowlist": {
-      "all": false
-    },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "externalBin": [],
-      "identifier": "com.onlivfe.vrpeeps",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
+      "category": "Utility",
+      "copyright": "com.munally.lj (c) 2024",
+      "identifier": "com.onlivfe.app",
+      "longDescription": "VR contacts + social platforms + identity management",
+      "shortDescription": "Onlivfe shows your social (VR) platforms' friends quickly in one place, without needing to open each platform individually.",
       "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      },
       "icon": [
         "../res/icons/32x32.png",
         "../res/icons/128x128.png",
@@ -47,17 +28,15 @@
       ]
     },
     "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": false
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; media-src 'self' https://*;",
+      "freezePrototype": true
     },
     "windows": [
       {
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "VR Peeps",
+        "title": "Onlivfe",
         "width": 800
       }
     ]

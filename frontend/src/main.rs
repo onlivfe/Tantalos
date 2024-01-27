@@ -13,88 +13,67 @@
 #![allow(clippy::tabs_in_doc_comments)]
 // Not much can be done about it :/
 #![allow(clippy::multiple_crate_versions)]
+// Leptos sadly exports from root without a prelude
+#![allow(clippy::wildcard_imports)]
+#![allow(clippy::future_not_send)]
 
-use instances::Instances;
-use peeps::Peeps;
+use leptos::*;
+use leptos_router::*;
 use tauri_sys::tauri::invoke;
-use yew::prelude::*;
-use yew_hooks::prelude::*;
-use yew_router::prelude::*;
 
 mod icons;
-mod instances;
-mod peeps;
-mod settings;
 pub use icons::*;
 
-#[derive(Clone, Routable, PartialEq)]
-enum Route {
-	#[at("/peeps")]
-	Peeps,
-	#[at("/instances")]
-	Instances,
-	#[at("/settings")]
-	SettingsRoot,
-	#[at("/settings/*")]
-	Settings,
-	#[at("/save-and-exit")]
-	SaveAndExit,
-	#[not_found]
-	#[at("/404")]
-	NotFound,
-}
+mod routes;
+pub use routes::*;
 
-#[allow(clippy::needless_pass_by_value)]
-fn switch_route(route: Route) -> Html {
-	match route {
-		Route::Peeps => html! {<Peeps/>},
-		Route::Instances => html! {<Instances/>},
-		Route::SettingsRoot | Route::Settings => {
-			html! { <Switch<settings::Route> render={settings::switch_route} /> }
-		}
-		Route::NotFound => {
-			html! {<Redirect<Route> to={Route::Peeps}/>}
-		}
-		Route::SaveAndExit => html! {<SaveAndExit/>},
-	}
-}
+mod instances;
+use instances::*;
 
-#[function_component(SaveAndExit)]
-fn save_and_exit() -> Html {
-	let closing = use_async_with_options(
-		async move {
+mod peeps;
+use peeps::*;
+
+mod settings;
+use settings::*;
+
+#[component]
+fn save_and_exit() -> impl IntoView {
+	let closing = create_resource(
+		|| (),
+		|()| async move {
 			match invoke::<_, ()>("save_and_exit", &()).await {
-				Ok(_) => Ok(()),
+				Ok(()) => Ok(()),
 				Err(e) => Err(e.to_string()),
 			}
 		},
-		UseAsyncOptions::enable_auto(),
 	);
 
-	if closing.loading {
-		html! {
-			<>
-				<h1>{"Saving..."}</h1>
-				<progress></progress>
-			</>
-		}
-	} else if let Some(error) = closing.error.as_ref() {
-		html! {
-			<section>
-				<h1>{"Error exiting"}</h1>
-				<details>
-					<summary>{"Details"}</summary>
-					<code>{error}</code>
-				</details>
-			</section>
-		}
-	} else {
-		html! {
-			<>
-				<h1>{"Window closed"}</h1>
-				<p>{"The window closing code ran successfully, so if you're reading this, something went very wrong."}</p>
-			</>
-		}
+	view! {
+		<h1>{"Saving..."}</h1>
+		{move || match closing.get() {
+			None => view! { <progress></progress> }.into_view(),
+			Some(Err(error)) => {
+				view! {
+					<section>
+						<h2>{"Error exiting"}</h2>
+						<details>
+							<summary>{"Details"}</summary>
+							<code>{error}</code>
+						</details>
+					</section>
+				}
+					.into_view()
+			}
+			Some(Ok(())) => {
+				view! {
+					<h1>{"Window closed"}</h1>
+					<p>
+						{"The window closing code ran successfully, so if you're reading this, something went very wrong."}
+					</p>
+				}
+					.into_view()
+			}
+		}}
 	}
 }
 
@@ -109,75 +88,85 @@ pub enum HistoryBehavior {
 	Overwrite,
 }
 
-#[derive(Properties, PartialEq)]
-pub struct TwoWayBindingProps<T: PartialEq> {
-	pub value: T,
-	pub onchange: Callback<T>,
-}
-
-
-#[function_component(App)]
-fn app() -> Html {
+#[component]
+fn app() -> impl IntoView {
 	struct NavLink {
-		pub to: Route,
+		pub page: Page,
 		pub icon: &'static str,
 		pub label: &'static str,
 	}
 
-	let nav_submenus = vec![
+	let nav_links = vec![
 		vec![
-			NavLink { to: Route::Peeps, icon: "group", label: "Friends" },
+			NavLink { page: Page::Peeps, icon: "group", label: "Friends" },
 			NavLink {
-				to: Route::Instances,
+				page: Page::Instances,
 				icon: "travel_explore",
 				label: "Instances",
 			},
 		],
 		vec![
-			NavLink { to: Route::SettingsRoot, icon: "settings", label: "Settings" },
 			NavLink {
-				to: Route::SaveAndExit,
-				icon: "close",
-				label: "Close the window",
+				page: Page::Settings(SettingsPage::Settings),
+				icon: "settings",
+				label: "Settings",
 			},
+			NavLink { page: Page::Quit, icon: "close", label: "Close the window" },
 		],
-	]
-	.into_iter()
-	.map(|subnav| {
-		html! {
-			<li>
-				<ul>
-				{
-				subnav
-					.into_iter()
-					.map(|nav_link| {
-						html! {
-							<li title={nav_link.label}><Link<Route> to={nav_link.to}><Icon name={nav_link.icon}/></Link<Route>></li>
-						}})
-					.collect::<Html>()
-				}
-				</ul>
-			</li>
-		}
-})
-	.collect::<Html>();
+	];
 
-	html! {
-		<BrowserRouter>
+	view! {
+		<Router>
 			<nav>
 				<ul>
-					{nav_submenus}
+
+					{nav_links
+						.into_iter()
+						.map(|subnav| {
+							view! {
+								<li>
+									<ul>
+
+										{subnav
+											.into_iter()
+											.map(|nav_link| {
+												view! {
+													<li title=nav_link.label>
+														<A href=nav_link.page.path().into_owned()>
+															<Icon name=nav_link.icon/>
+														</A>
+													</li>
+												}
+											})
+											.collect::<Vec<_>>()}
+
+									</ul>
+								</li>
+							}
+						})
+						.collect::<Vec<_>>()}
+
 				</ul>
 			</nav>
 			<main>
-				<Switch<Route> render={switch_route} />
+				<Routes>
+					<Route path=Page::Peeps.path() view=|| view! { <Peeps/> }/>
+					<Route path=Page::Instances.path() view=|| view! { <Instances/> }/>
+					<Route path="/settings" view=|| view! { <Outlet/> }>
+						<Route path=SettingsPage::AddUser.path() view=|| view! { <AddAccount/> }/>
+						<Route path=SettingsPage::Settings.path() view=|| view! { <Settings/> }/>
+					</Route>
+					<Route path=Page::Quit.path() view=|| view! { <SaveAndExit/> }/>
+				</Routes>
 			</main>
-		</BrowserRouter>
+		</Router>
 	}
 }
 
 fn main() {
-	// Router breaks if the following is enabled
-	//yew::set_event_bubbling(false);
-	yew::Renderer::<App>::new().render();
+	_ = console_log::init_with_level(log::Level::Debug);
+	console_error_panic_hook::set_once();
+	mount_to_body(|| {
+		view! { <App/> }
+	});
 }

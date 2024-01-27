@@ -1,38 +1,18 @@
+use leptos::*;
+use leptos_router::*;
 use onlivfe::PlatformAccount;
 use tauri_sys::tauri::invoke;
-use yew::prelude::*;
-use yew_hooks::prelude::*;
-use yew_router::prelude::*;
 
 mod add_account;
-use add_account::AddAccount;
+pub use add_account::AddAccount;
 
-#[derive(Clone, Routable, PartialEq, Eq)]
-pub enum Route {
-	#[at("/settings")]
-	Settings,
-	#[at("/settings/add-account")]
-	AddAccount,
-	#[not_found]
-	#[at("/settings/404")]
-	NotFound,
-}
+use crate::SettingsPage;
 
-#[allow(clippy::needless_pass_by_value)]
-pub fn switch_route(route: Route) -> Html {
-	match route {
-		Route::Settings => html! {<Settings></Settings>},
-		Route::AddAccount => html! { <AddAccount></AddAccount> },
-		Route::NotFound => {
-			html! {<Redirect<super::Route> to={super::Route::Peeps}/>}
-		}
-	}
-}
-
-#[function_component(AccountsList)]
-fn accounts_list() -> Html {
-	let authenticated_accounts = use_async_with_options(
-		async move {
+#[component]
+fn accounts_list() -> impl IntoView {
+	let authenticated_accounts = create_resource(
+		|| (),
+		|()| async move {
 			match invoke::<_, Vec<PlatformAccount>>("authenticated_accounts", &())
 				.await
 			{
@@ -40,18 +20,17 @@ fn accounts_list() -> Html {
 				Err(e) => Err(e.to_string()),
 			}
 		},
-		UseAsyncOptions::enable_auto(),
 	);
 
-	if authenticated_accounts.loading {
-		html! {
+	match authenticated_accounts.get() {
+		None => view! {
 			<section>
 				<h2>{"Accounts"}</h2>
 				<progress></progress>
 			</section>
 		}
-	} else if let Some(error) = authenticated_accounts.error.as_ref() {
-		html! {
+		.into_view(),
+		Some(Err(error)) => view! {
 			<section>
 				<h2>{"Error loading accounts"}</h2>
 				<details>
@@ -60,28 +39,33 @@ fn accounts_list() -> Html {
 				</details>
 			</section>
 		}
-	} else {
-		html! {
+		.into_view(),
+		Some(Ok(authenticated_accounts)) => view! {
 			<section>
-				<h2>{ "Accounts" }</h2>
+				<h2>{"Accounts"}</h2>
 				<ul>
-						{ authenticated_accounts.data.as_ref().map_or_else(
-							|| html!{<p>{"Failed to get accounts"}</p>},
-							|v| v.iter().map(|acc| html!{ <li>{acc.id().id_as_string()}</li> }).collect::<Html>()
-						)}
+					<For
+						each=move || authenticated_accounts.clone()
+						key=PlatformAccount::id
+						children=move |acc| {
+							view! { <li>{acc.id().id_as_string()}</li> }
+						}
+					/>
+
 				</ul>
 			</section>
 		}
+		.into_view(),
 	}
 }
 
-#[function_component(Settings)]
-fn settings() -> Html {
-	html! {
-		<>
-			<h1>{"Settings"}</h1>
-			<AccountsList/>
-			<Link<Route> to={Route::AddAccount} classes="button"> {"Add account"} </Link<Route>>
-		</>
+#[component]
+pub fn settings() -> impl IntoView {
+	view! {
+		<h1>{"Settings"}</h1>
+		<AccountsList/>
+		<A href=SettingsPage::AddUser.path() class="button">
+			{"Add account"}
+		</A>
 	}
 }
