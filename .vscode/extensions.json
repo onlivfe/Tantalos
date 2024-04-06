@@ -1,6 +1,5 @@
 {
 	"recommendations": [
-		"rust-lang.rust-analyzer",
-		"techtheawesome.rust-yew"
+		"rust-lang.rust-analyzer"
 	]
 }

@@ -1,6 +1,6 @@
 # Onlivfe app_rs
 
-A rust-native [onlivfe app](https://onlivfe.com) built using [tauri](https://tauri.app/) and [yew](https://yew.rs/), working as a more ugly alternative to the [VRPeeps app](https://github.com/onlivfe/desktop) that's built with [Angular](https://angular.io/) & [tauri](https://tauri.app).
+A rust-native [onlivfe app](https://onlivfe.com) built using [tauri](https://tauri.app/) and [leptos](https://leptos.dev/), working as a more ugly alternative to the [VRPeeps app](https://github.com/onlivfe/desktop) that's built with [Angular](https://angular.io/) & [tauri](https://tauri.app).
 
 Also note that the license is [AGPL](https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0)).
 
