@@ -13,10 +13,10 @@ categories = ["games"]
 keywords = ["onlivfe", "social_vr", "social_platform", "social_network", "social"]
 
 [build-dependencies]
-tauri-build = { version = "2.0.0-rc.0", features = [] }
+tauri-build = { version = "2.0.0-rc.10", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.0-rc.0", features = [] }
+tauri = { version = "2.0.0-rc.11", features = [] }
 
 onlivfe = { workspace = true, default-features = false }
 onlivfe_wrapper = { workspace = true, default-features = false }
