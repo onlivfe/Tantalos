@@ -1,5 +1,11 @@
 use leptos::{html::Form, *};
-use onlivfe::{LoginCredentials, LoginError, PlatformAccountId, PlatformType};
+use onlivfe::{
+	LoginCredentials,
+	LoginError,
+	PlatformAccountId,
+	PlatformType,
+	resonite::query::UserSessionAuthentication,
+};
 use tauri_sys::tauri::invoke;
 use web_sys::{Event, SubmitEvent};
 
@@ -12,10 +18,10 @@ fn switch_login_credentials_platform(
 			onlivfe::vrchat::LoginRequestPart::SecondFactor(_) => String::new(),
 		},
 		Some(LoginCredentials::ChilloutVR(v)) => v.email.clone(),
-		Some(LoginCredentials::NeosVR(v)) => match v.identifier.clone() {
-			onlivfe::neosvr::query::LoginCredentialsIdentifier::Email(v)
-			| onlivfe::neosvr::query::LoginCredentialsIdentifier::Username(v)
-			| onlivfe::neosvr::query::LoginCredentialsIdentifier::OwnerID(v) => v,
+		Some(LoginCredentials::Resonite(v)) => match v.body.identifier.clone() {
+			onlivfe::resonite::query::LoginCredentialsIdentifier::Email(v)
+			| onlivfe::resonite::query::LoginCredentialsIdentifier::Username(v)
+			| onlivfe::resonite::query::LoginCredentialsIdentifier::OwnerID(v) => v,
 		},
 		_ => String::new(),
 	};
@@ -26,7 +32,10 @@ fn switch_login_credentials_platform(
 			onlivfe::vrchat::LoginRequestPart::SecondFactor(_) => String::new(),
 		},
 		Some(LoginCredentials::ChilloutVR(v)) => v.password.clone(),
-		Some(LoginCredentials::NeosVR(v)) => v.password.clone(),
+		Some(LoginCredentials::Resonite(v)) => match v.body.authentication {
+			UserSessionAuthentication::Password(pw) => pw.password.clone(),
+			_ => "".to_owned()
+		},
 		_ => String::new(),
 	};
 
@@ -45,9 +54,9 @@ fn switch_login_credentials_platform(
 				password: old_pw,
 			},
 		)),
-		PlatformType::NeosVR => LoginCredentials::NeosVR(Box::new(
-			onlivfe::neosvr::query::LoginCredentials::new(
-				onlivfe::neosvr::query::LoginCredentialsIdentifier::Username(old_name),
+		PlatformType::Resonite => LoginCredentials::Resonite(Box::new(
+			onlivfe::resonite::query::LoginCredentials::new(
+				onlivfe::resonite::query::LoginCredentialsIdentifier::Username(old_name),
 				old_pw,
 			),
 		)),
@@ -197,10 +206,10 @@ fn account_credentials_input(
 			view! { <CvrAccountCredentialsInput value=value setter=cvr_setter/> }
 				.into_view()
 		}
-		LoginCredentials::NeosVR(credentials) => {
+		LoginCredentials::Resonite(credentials) => {
 			let (value, neos_setter) = create_signal(*credentials);
 			create_isomorphic_effect(move |_| {
-				setter.set(LoginCredentials::NeosVR(Box::new(value.get())));
+				setter.set(LoginCredentials::Resonite(Box::new(value.get())));
 			});
 
 			view! { <NeosAccountCredentialsInput value=value setter=neos_setter/> }
@@ -356,10 +365,10 @@ fn cvr_account_credentials_input(
 
 #[component]
 fn neos_account_credentials_input(
-	#[prop(into)] value: Signal<onlivfe::neosvr::query::LoginCredentials>,
-	#[prop(into)] setter: WriteSignal<onlivfe::neosvr::query::LoginCredentials>,
+	#[prop(into)] value: Signal<onlivfe::resonite::query::LoginCredentials>,
+	#[prop(into)] setter: WriteSignal<onlivfe::resonite::query::LoginCredentials>,
 ) -> impl IntoView {
-	use onlivfe::neosvr::query::LoginCredentialsIdentifier;
+	use onlivfe::resonite::query::LoginCredentialsIdentifier;
 
 	let on_identifier_type_change = move |event: Event| {
 		let mut creds = value.get();

@@ -6,8 +6,8 @@ edition = "2021"
 
 [dependencies]
 onlivfe = { workspace = true, default-features = false }
-leptos = { version = "0.7.0-beta5", features = ["csr"], default-features = false }
-leptos_router = { version = "0.7.0-beta5", features = [], default-features = false }
+leptos = { version = "0.6.15", features = ["csr"], default-features = false }
+leptos_router = { version = "0.6.15", features = [], default-features = false }
 tauri-sys = { git = "https://github.com/JonasKruckenberg/tauri-sys", features = ["tauri"] }
 web-sys = { version = "0.3.70", features = ["HtmlSelectElement", "HtmlFormElement"] }
 serde = { workspace = true }
