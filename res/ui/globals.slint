@@ -1,0 +1,11 @@
+import { Theme } from "./theme.slint";
+
+export enum RootRoute {
+    login,
+    settings,
+    about
+}
+
+export global Globals  {
+    in-out property<Theme> theme;
+}

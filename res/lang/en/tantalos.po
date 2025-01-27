@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tantalos 0.1.0\n"
+"POT-Creation-Date: 2025-01-26 18:01+0000\n"
+"PO-Revision-Date: 2025-01-26 18:01+0000\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: index.slint:11
+msgctxt "Example"
+msgid "You have a single friend online"
+msgid_plural "You have {n} friends online"
+msgstr[0] "You have a single friend online"
+msgstr[1] "You have {n} friends online"
+
+#: index.slint:21
+msgctxt "title"
+msgid "Tantalos - VR socials"
+msgstr "Tantalos - VR socials"
+
+#: theme.slint:26
+msgctxt "PredefinedThemes"
+msgid "Default dark"
+msgstr "Default dark"

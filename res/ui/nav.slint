@@ -1,0 +1,20 @@
+import { VerticalBox, ListView, Button } from "std-widgets.slint";
+import { RootRoute } from "./globals.slint";
+import { Icon } from "./icon.slint";
+
+export component Sidenav {
+    VerticalBox {
+        ListView {
+            for data in [
+                { label: @tr("Login"), icon: "login", route: RootRoute.login },
+                { label: @tr("Settings"), icon: "settings",route: RootRoute.settings},
+                { label: @tr("About"), icon: "about", route: RootRoute.about },
+            ] : Button {
+                width: parent.width;
+                Icon {
+                    name: data.icon;
+                }
+            }
+        }
+    }
+}

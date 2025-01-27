@@ -13,3 +13,5 @@ target/
 *.pdb
 
 .env
+
+res/lang/*/LC_MESSAGES
