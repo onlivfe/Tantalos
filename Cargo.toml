@@ -1,70 +1,21 @@
-[package]
-name = "tantalos"
-version = "0.1.0"
-edition = "2021"
-build = "src/build.rs"
-default-run = "tantalos"
+[workspace]
+resolver = "2"
+members = [
+    "cli",
+    "desktop"
+]
 
-[lib]
-name = "tantalos"
-crate-type = ["lib", "cdylib"]
-path = "src/lib.rs"
+[workspace.dependencies]
 
-# For non-cli builds, normally could just use `tantalos --gui`
-[[bin]]
-name = "tantalos-gui"
-path = "src/bin/gui.rs"
-
-[[bin]]
-name = "tantalos"
-path = "src/bin/cli.rs"
-
-[features]
-default = ["cli", "gui"]
-gui = ["slint", "slint-build"]
-cli = ["clap"]
-clap = ["dep:clap"]
-
-# GUI
-[build-dependencies]
-slint-build = { version = "1.9.2", optional = true }
-[dependencies]
-slint = { optional = true, version = "1.9.2", features = ["gettext"] }
-dotenvy = "0.15.7"
-
-# CLI
-clap = { version = "4.5.27", features = ["derive"], optional = true }
-
-# Onlivfe
-
-# TODO: Move to onlivfe wrapper as re-export
-#onlivfe = { git = "https://github.com/onlivfe/core.git", default-features = false }
-onlivfe = { path = "../core/onlivfe", default-features = false }
-# TODO: Move to onlivfe wrapper as re-export as a feature
-#onlivfe_cache_store = { git = "https://github.com/onlivfe/core.git", default-features = false }
-onlivfe_cache_store = { path = "../core/onlivfe_cache_store", default-features = false }
-
-
-[dependencies.onlivfe_wrapper]
+[workspace.dependencies.onlivfe_wrapper]
 path = "../core/onlivfe_wrapper"
+#git = "https://github.com/onlivfe/core.git"
 default-features = false
 
 # Logging
-[dependencies.tracing]
+[workspace.dependencies.tracing]
 version = "0.1.41"
 features = ["attributes", "log"]
-[dependencies.tracing-subscriber]
+[workspace.dependencies.tracing-subscriber]
 version = "0.3.19"
 features = ["time", "parking_lot", "env-filter", "fmt", "json", "local-time"]
-
-# Web support
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen = { version = "0.2.100" }
-getrandom = { version = "0.3.0", features = ["wasm_js"] }
-
-[package.metadata.docs.rs]
-all-features = true
-rustdoc-args = ["--cfg", "nightly"]
-
-[lints.rust]
-unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }

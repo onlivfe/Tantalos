@@ -1,6 +1,18 @@
 {
 	"rust-analyzer.cargo.features": "all",
+	"editor.formatOnSave": true,
+	"rust-analyzer.diagnostics.experimental.enable": true,
+	"rust-analyzer.assist.emitMustUse": true,
+	"rust-analyzer.check.command": "clippy",
+	"rust-analyzer.check.features": "all",
 	"[rust]": {
 		"editor.defaultFormatter": "rust-lang.rust-analyzer"
+	},
+	"[ftl]": {
+		"editor.tabSize": 2,
+		"editor.useTabStops": false
+	},
+	"files.associations": {
+		".ftl": "ftl",
 	}
 }

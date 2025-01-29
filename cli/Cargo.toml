@@ -1,0 +1,15 @@
+[package]
+name = "tantalos-cli"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+
+[dependencies]
+clap = { version = "4.5.27", features = ["derive"] }
+onlivfe_wrapper = { workspace = true }
+
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }
+
