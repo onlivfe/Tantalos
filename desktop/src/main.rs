@@ -18,7 +18,7 @@ static MATERIAL_ICONS_FONT: &[u8] =
 fn main() -> Result<(), Box<dyn std::error::Error>> {
 	onlivfe_wrapper::init("Tantalos", env!("CARGO_PKG_VERSION")).unwrap();
 
-	let config: LaunchConfigBuilder<'_, ()> = LaunchConfigBuilder::default();
+	let config: LaunchConfig<'_, ()> = LaunchConfig::default();
 	let config = config
 		.without_default_fonts()
 		.with_font("Fira Sans", FIRA_SANS_FONT)
@@ -27,7 +27,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 		.with_title("Tantalos")
 		.with_default_font("Fira Sans")
 		.with_background("black");
-	let config = config.build();
 	launch_cfg(app, config);
 
 	Ok(())
@@ -163,10 +162,10 @@ fn LanguagePicker() -> Element {
 			for (lang_id, as_str) in languages.clone() {
 
 					Button {
+						onclick: move |_| i18n.set_language(lang_id.clone()),
 						label { { t!("language", lang: &as_str) } }
-						onclick: move |_| i18n.set_language(lang_id.clone())
 				}
-				{ { as_str } }
+				{ as_str }
 			}
 		}
 	)

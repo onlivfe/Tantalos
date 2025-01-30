@@ -11,13 +11,14 @@ onlivfe_wrapper = { workspace = true }
 
 
 # Translations seem broken with dioxius 0.6/freya-0.3rc
-freya = { version = "0.2.2"}
+#freya = { version = "0.2.2"}
 #freya = { version = "0.3.0-rc.0"}
+freya = { git = "https://github.com/marc2332/freya" }
 #dioxus = { version = "0.6", features = ["macro", "hooks"], default-features = false }
 
 # Newest seem broken with dioxius 0.6/freya-0.3rc
-dioxus-i18n = { version = "0.2.5" }
-#dioxus-i18n = { version = "0.3.0" }
+#dioxus-i18n = { version = "0.2.5" }
+dioxus-i18n = { version = "0.3.0" }
 
 
 [lints.rust]
