@@ -13,12 +13,24 @@ allow = [
 	"ISC",
 	"BSD-3-Clause",
 	"Apache-2.0",
+	"Apache-2.0 WITH LLVM-exception",
 	"MPL-2.0",
 	"Unicode-3.0",
-	"OpenSSL",
-	"Zlib"
+	"Zlib",
+	"BSL-1.0"
 ]
 confidence-threshold = 0.8
+
+exceptions = [
+	{ allow = ["OpenSSL"], crate = "ring" },
+	# So far there's not really other contributors so I can use the code
+	# without following the public license, since my own copyright
+	{ allow = ["AGPL-3.0"], crate = "onlivfe_cache_store" },
+	{ allow = ["AGPL-3.0"], crate = "onlivfe_wrapper" },
+	{ allow = ["AGPL-3.0"], crate = "onlivfe_net" },
+	{ allow = ["AGPL-3.0"], crate = "onlivfe" },
+	{ allow = ["LicenseRef-UNLICENSED"], crate = "tantalos" }
+]
 
 [[licenses.clarify]]
 name = "ring"

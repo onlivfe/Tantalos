@@ -1,0 +1,30 @@
+[application]
+
+# App (Project) Name
+name = "Tantalos"
+asset_dir = "res"
+default_platform = "desktop"
+
+
+[web.app]
+
+# HTML title tag content
+title = "Tantalos"
+watch_path = ["src", "res"]
+
+
+# include `assets` in web platform
+[web.resource]
+
+# Additional CSS style files
+style = []
+
+# Additional JavaScript files
+script = []
+
+[web.resource.dev]
+
+# Javascript code file
+# serve: [dev-server] only
+script = []
+

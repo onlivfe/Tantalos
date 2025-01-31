@@ -3,5 +3,5 @@
 [Hunspell]
 skip_os_lookups = true
 use_builtin = true
-search_dirs = ["."]
+search_dirs = ["src"]
 extra_dictionaries = ["extra.dic"]

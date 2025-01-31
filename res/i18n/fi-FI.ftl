@@ -1,8 +1,8 @@
--app-name = Tantalos
-increase = Suurenna
-decrease = Pienennä
+tantalos = Tantalos
+home = Koti
+accounts = Käyttäjätilit
 language = { $lang ->
   *[default] Valitse kieli
-  [en-US] Englanninkieli (English)
-  [fi-FI] Suomenkieli
+  [en-US] Englannin kieli (English)
+  [fi-FI] Suomen kieli
 }

@@ -1,0 +1,71 @@
+:root {
+  --hiq-body-background-color: black;
+  --hiq-text-color: white;
+  --hiq-font-family-base: 'Fira Sans';
+}
+
+@font-face {
+    font-family: 'Fira Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/assets/fonts/FiraSans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Material Icons";
+  font-style: normal;
+  font-weight: 400;
+  src: url("/assets/fonts/material-icons.ttf") format("truetype");
+}
+
+i.icon {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+}
+
+
+html,
+body {
+    height: 100vh;
+    width: 100vw;
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+
+#main {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+}
+
+ul,
+ol {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul {
+  flex-direction: row;
+}
+
+nav > ul {
+  justify-content: space-between;
+}
+
+nav li {
+  padding: 0.1em 0.25em;
+}

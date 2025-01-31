@@ -43,7 +43,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    steps:s
+    steps:
       - name: Checkout sources
         uses: actions/checkout@v4
       - name: Install stable toolchain

@@ -3,11 +3,12 @@
 A rust-native [onlivfe app](https://onlivfe.com) built using [freya](https://freyaui.dev/).
 
 The [Tántalos](https://en.wikipedia.org/wiki/Tantalus) name refers to how the perfect pure rust stack always feels so close.
-Yet after so many rewrites there still isn't a solution that I've been able to find acceptable & stick to.
+Yet after so many rewrites there still isn't a solution thsat I've been able to find acceptable & stick to.
 List of victims of my perfectionism include:
 
+- [Freya](https://freyaui.dev/) (too early, so many things broken)
 - [Slint](https://slint.dev/) (theming seems painful)
-- [Dioxus](https://dioxuslabs.com/) (wasm)
+<!-- - [Dioxus](https://dioxuslabs.com/) (wasm) -->
 - [Leptos](https://github.com/leptos-rs/leptos) (wasm)
 - [yew](https://yew.rs) with [Tauri](https://tauri.app/) (wasm)
 - [egui](https://github.com/emilk/egui) (state management & async issues)
@@ -18,6 +19,7 @@ Basic requirements:
 
 - [Git](https://git-scm.com)
 - [Rust](https://www.rust-lang.org/)
+- [Dioxus CLI](https://dioxuslabs.com/learn/0.6/getting_started/) (`cargo install dioxus-cli`)
 
 ### Building
 
@@ -27,7 +29,7 @@ Start off by cloning the project with git.
 git clone https://github.com/onlivfe/Tantalos
 ```
 
-Then the folder in your terminal and run `cargo run -p {tantalos/tantalos-cli}`
+Then open this folder and run `dx serve --platform {desktop/web/mobile}`
 
 Then get to hacking, & optionally replace the dependency in other projects by [overriding dependencies](https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html).
 

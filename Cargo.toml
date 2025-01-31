@@ -1,21 +1,63 @@
-[workspace]
-resolver = "2"
-members = [
-    "cli",
-    "desktop"
+[package]
+name = "tantalos"
+version = "0.1.0"
+authors = ["LJ"]
+edition = "2021"
+license = "LicenseRef-UNLICENSED"
+
+[features]
+default = []
+web = [
+	"dioxus/web",
+	#"web-sys"
 ]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
 
-[workspace.dependencies]
+[dependencies]
 
-[workspace.dependencies.onlivfe_wrapper]
+dioxus = { version = "0.6.2", features = ["router", "fullstack"] }
+#dioxus-sdk = { version = "0.6.0", features = [] }
+dioxus-i18n = { version = "0.3.0", features = [] }
+#dioxus-lazy = { version = "0.3.0", features = [] }
+# dioxus-use-computed
+# dioxus-query
+# golde
+#daisy_rsx = "0.1.14"
+#dioxus-material-icons = "3.0.0"
+#dioxus-material = { path = "../../dioxus-community/dioxus-material" }
+
+tracing = { version = "0.1.41", features = ["attributes", "log"] }
+#web-sys = { optional = true, version = "0.3.77", features = [] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies.onlivfe_wrapper]
 path = "../core/onlivfe_wrapper"
 #git = "https://github.com/onlivfe/core.git"
 default-features = false
 
-# Logging
-[workspace.dependencies.tracing]
-version = "0.1.41"
-features = ["attributes", "log"]
-[workspace.dependencies.tracing-subscriber]
-version = "0.3.19"
-features = ["time", "parking_lot", "env-filter", "fmt", "json", "local-time"]
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
+
+
+[package.metadata.packager]
+before-packaging-command = "cargo build --release --features desktop"
+product-name = "Tantalos"
+description = "An onlivfe GUI to interact with social VR platforms"
+homepage = "https://onlivfe.com"
+publisher = "com.munally"
+authors = [
+	"The onlivfe contributors"
+]
+identifier = "com.munally.tantalos"
+resources = ["../res/icons/icon.png"]
+icons = ["../res/icons/icon.png"]
+formats = ["pacman"]
