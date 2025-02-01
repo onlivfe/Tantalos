@@ -30,6 +30,8 @@ dioxus-i18n = { version = "0.3.0", features = [] }
 tracing = { version = "0.1.41", features = ["attributes", "log"] }
 #web-sys = { optional = true, version = "0.3.77", features = [] }
 
+onlivfe = { path = "../core/onlivfe" }
+strum = "0.26.3"
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies.onlivfe_wrapper]
 path = "../core/onlivfe_wrapper"
 #git = "https://github.com/onlivfe/core.git"

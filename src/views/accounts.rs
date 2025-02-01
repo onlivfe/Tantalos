@@ -5,9 +5,14 @@ use dioxus_i18n::t;
 
 #[component]
 pub fn Accounts() -> Element {
+	use strum::VariantNames;
+
+	let mut totp_enabled = use_signal(|| true);
 	let mut response = use_signal(String::new);
+	let mut selected_platform = use_signal(|| onlivfe::PlatformType::VRChat);
 
 	let accounts_len = 0;
+
 
 	// TODO: Translate
 	rsx! {
@@ -24,17 +29,69 @@ pub fn Accounts() -> Element {
 				form {
 					fieldset {
 						role: "group",
+						select {
+							name: "platform",
+							aria_label: "Select platform",
+							for platform in onlivfe::platforms() {
+								option {
+									selected: selected_platform() == platform,
+									onclick: move |_| async move {
+											selected_platform.set(platform);
+									},
+									{ platform.as_ref() }
+								}
+							}
+						},
+						if selected_platform() == onlivfe::PlatformType::Resonite {
+							select {
+								name: "identifier-type",
+								aria_label: "Identifier type",
+								for id_type in onlivfe::resonite::query::LoginCredentialsIdentifier::VARIANTS {
+									option {
+										{ id_type }
+									}
+								}
+							},
+						}
+					}
+					fieldset {
+						role: "group",
 						input {
 							name: "user",
 							autocomplete: "email",
+							required: true,
 							type: "text",
 							placeholder: "Log in"
 						},
 						input {
 							name: "password",
 							type: "password",
+							required: true,
 							placeholder: "Password"
 						},
+					}
+					fieldset {
+						role: "group",
+						label {
+							width: "fit-content",
+							text_wrap: "nowrap",
+							input {
+								type: "checkbox",
+								checked: totp_enabled(),
+								role: "switch",
+								onclick: move |_| async move {
+									totp_enabled.set(!totp_enabled());
+								},
+							},
+							{ "Use TOTP" }
+						}
+						if totp_enabled() {
+							input {
+								name: "totp",
+								type: "number",
+								placeholder: "TOTP"
+							},
+						}
 						input {
 							type: "submit",
 							value: "Log in"
