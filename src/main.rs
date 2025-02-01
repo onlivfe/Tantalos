@@ -6,10 +6,10 @@
 
 use std::borrow::Cow;
 
-use components::{I18nConf, Layout, i18n_config};
+use components::{I18nConf, Layout, LayoutConfig, i18n_config};
 use dioxus::prelude::*;
 use dioxus_i18n::prelude::use_init_i18n;
-use views::{Accounts, Home};
+use views::{Accounts, Info, Settings};
 
 mod components;
 mod views;
@@ -17,17 +17,17 @@ mod views;
 #[derive(Debug, Clone, Routable, PartialEq)]
 enum Route {
 	#[layout(Layout)]
-	#[route("/")]
-	Home {},
+	#[redirect("/", || Route::Info)]
+	#[route("/info")]
+	Info,
 	#[route("/accounts")]
 	Accounts,
+	#[route("/settings")]
+	Settings,
 }
 
-const _FIRA_SANS_FONT: Asset = asset!("/res/fonts/FiraSans-Regular.ttf");
 const FAVICON: Asset = asset!("/res/icons/favicon.ico");
 const MAIN_CSS: Asset = asset!("/res/css/main.css");
-const SANITIZE_CSS: Asset = asset!("/res/css/sanitize.css");
-const HIQ_CSS: Asset = asset!("/res/css/hiq.min.css");
 
 fn main() {
 	#[cfg(not(target_arch = "wasm32"))]
@@ -71,14 +71,14 @@ fn App() -> Element {
 	let (languages, i18n) = i18n_config();
 	use_init_i18n(|| i18n);
 	use_context_provider(|| I18nConf { languages });
-	use_context_provider(|| ColorScheme::default());
+	use_context_provider(ColorScheme::default);
+	use_context_provider(|| Signal::new(LayoutConfig::default()));
 
+	document::eval(r#"document.documentElement.setAttribute('data-theme', 'dark')"#);
 	rsx! {
-			// Global app resources
-			document::Link { rel: "icon", href: FAVICON }
-			document::Link { rel: "stylesheet", href: SANITIZE_CSS }
-			document::Link { rel: "stylesheet", href: HIQ_CSS }
-			document::Link { rel: "stylesheet", href: MAIN_CSS }
-			Router::<Route> {}
+		// Global app resources
+		document::Link { rel: "icon", href: FAVICON }
+		document::Link { rel: "stylesheet", href: MAIN_CSS }
+		Router::<Route> {}
 	}
 }

@@ -28,3 +28,12 @@ script = []
 # serve: [dev-server] only
 script = []
 
+
+[bundle]
+identifier = "com.munally.tantalos"
+publisher = "munally.com"
+icons = ["./res/icons/icon.png"]
+resources = ["./res/icons/icon.png"]
+copyright =	"The onlivfe contributors"
+short_description = "Onlivfe GUI"
+long_description = "An onlivfe GUI to interact with social VR platforms"

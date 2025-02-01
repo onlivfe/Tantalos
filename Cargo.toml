@@ -46,18 +46,3 @@ inherits = "dev"
 
 [profile.android-dev]
 inherits = "dev"
-
-
-[package.metadata.packager]
-before-packaging-command = "cargo build --release --features desktop"
-product-name = "Tantalos"
-description = "An onlivfe GUI to interact with social VR platforms"
-homepage = "https://onlivfe.com"
-publisher = "com.munally"
-authors = [
-	"The onlivfe contributors"
-]
-identifier = "com.munally.tantalos"
-resources = ["../res/icons/icon.png"]
-icons = ["../res/icons/icon.png"]
-formats = ["pacman"]

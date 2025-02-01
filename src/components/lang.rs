@@ -2,6 +2,9 @@ use dioxus::prelude::*;
 use dioxus_i18n::unic_langid::{LanguageIdentifier, langid as langId};
 use dioxus_i18n::{prelude::*, t};
 
+use super::VerticalDirection;
+use crate::components::Icon;
+
 //const LANGUAGES: &[LanguageIdentifier] = &[langId!("en-US"),
 // langId!("fi-FI")];
 pub fn i18n_config() -> (Vec<LanguageIdentifier>, I18nConfig) {
@@ -46,7 +49,11 @@ pub struct I18nConf {
 	pub languages: Vec<LanguageIdentifier>,
 }
 
-pub fn LanguagePicker() -> Element {
+#[component]
+pub fn LanguagePicker(
+	#[props(default = true)] compact: bool,
+	#[props(default = VerticalDirection::Down)] open_direction: VerticalDirection,
+) -> Element {
 	let mut i18n = i18n();
 	let i18n_config = use_context::<I18nConf>();
 
@@ -54,15 +61,35 @@ pub fn LanguagePicker() -> Element {
 		i18n_config.languages.iter().map(|l| (l.clone(), format!("{l}"))).collect();
 
 	rsx! {
-		ul {
-			for (lang_id, as_str) in languages.clone() {
-				li {
-					button {
+		details {
+			class: "dropdown",
+			summary {
+				class: "outline",
+				role: "button",
+				span {
+					Icon {
+						name: "language"
+					}
+					if !compact {
+						{ " " }
+						{t!("language", selector: "true", lang: i18n.language().to_string())}
+					}
+				}
+			},
+			ul {
+				position: if open_direction == VerticalDirection::Down { None } else { Some("absolute") },
+				bottom: if open_direction == VerticalDirection::Down { None } else { Some("100%") },
+				for (lang_id , as_str) in languages.clone() {
+					li {
+						a {
+							href: "#",
+							aria_current: i18n.language() == lang_id,
 							onclick: move |_| i18n.set_language(lang_id.clone()),
-							span { {t!("language", lang: &as_str)} }
+							{t!("language", lang: &as_str)}
+						}
 					}
 				}
 			}
-	 }
+		}
 	}
 }

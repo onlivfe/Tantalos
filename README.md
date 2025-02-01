@@ -33,7 +33,7 @@ Then open this folder and run `dx serve --platform {desktop/web/mobile}`
 
 Then get to hacking, & optionally replace the dependency in other projects by [overriding dependencies](https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html).
 
-To create a published version of the gui, use [`cargo-packager`](https://github.com/crabnebula-dev/cargo-packager) (`cargo install cargo-packager --locked`): `cargo packager --release -p tantalos`
+To create a published version of the gui, run `dx bundle --release --platform desktop`
 
 ### Translations
 
