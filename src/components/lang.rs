@@ -55,8 +55,8 @@ pub fn LanguagePicker() -> Element {
 
 	rsx! {
 		ul {
-			li {
-				for (lang_id, as_str) in languages.clone() {
+			for (lang_id, as_str) in languages.clone() {
+				li {
 					button {
 							onclick: move |_| i18n.set_language(lang_id.clone()),
 							span { {t!("language", lang: &as_str)} }

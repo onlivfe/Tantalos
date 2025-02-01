@@ -7,8 +7,15 @@ use crate::components::LanguagePicker;
 pub fn Footer() -> Element {
 	rsx! {
 		footer {
-			LanguagePicker {}
-			p { {t!("tantalos") + concat!(" v", env!("CARGO_PKG_VERSION"))} }
+			class: "container",
+			ul {
+				li {
+					LanguagePicker {}
+				},
+				li {
+					p { {t!("tantalos") + concat!(" v", env!("CARGO_PKG_VERSION"))} }
+				}
+			}
 		}
 	}
 }

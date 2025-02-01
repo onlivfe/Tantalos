@@ -12,8 +12,13 @@ pub fn Layout() -> Element {
 			Navbar {  },
 		}
 		div {
-			Outlet::<Route> {},
-			Footer {  }
+			class: "content",
+			main {
+				class: "container",
+
+					Outlet::<Route> {},
+			}
+			Footer { }
 		}
 	}
 }

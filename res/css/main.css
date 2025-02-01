@@ -2,6 +2,10 @@
   --hiq-body-background-color: black;
   --hiq-text-color: white;
   --hiq-font-family-base: 'Fira Sans';
+  --hiq-list-margin-left: 1rem;
+  --hiq-block-element-margin-bottom: 1rem;
+  --hiq-color-primary: #ff0256;
+  /*--hiq-block-element-margin-bottom: 1rem;*/
 }
 
 @font-face {
@@ -18,7 +22,12 @@
   src: url("/assets/fonts/material-icons.ttf") format("truetype");
 }
 
+a, button, *[role="button"] {
+  cursor: pointer;
+}
+
 i.icon {
+  /* biome-ignore lint: Special icon font */
   font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
@@ -34,7 +43,7 @@ i.icon {
 
 
 html,
-body {
+body, #main {
     height: 100vh;
     width: 100vw;
     background-color: black;
@@ -45,8 +54,25 @@ body {
 
 
 #main {
-    display: grid;
-    grid-template-columns: min-content 1fr;
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  overflow: hidden;
+
+   > * {
+    min-height: 100%;
+    overflow: auto;
+    direction: rtl;
+  }
+  > * > * {
+    direction: ltr;
+  }
+
+  > .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--hiq-block-element-margin-bottom);
+  }
 }
 
 ul,
@@ -56,16 +82,29 @@ ol {
   list-style: none;
   margin: 0;
   padding: 0;
+  gap: var(--hiq-list-margin-left);
 }
 
-nav ul {
-  flex-direction: row;
+footer {
+  ul {
+    flex-direction: row;
+  }
+  > ul {
+    justify-content: space-between;
+    align-items: baseline;
+  }
 }
 
-nav > ul {
-  justify-content: space-between;
-}
+nav {
+  height: 100%;
+  & > ul {
+    height: 100%;
+    justify-content: space-between;
+    padding: 0.25rem;
+    padding-right: var(--hiq-list-margin-left);
+  }
 
-nav li {
-  padding: 0.1em 0.25em;
+  button, a {
+    display: block;
+  }
 }
