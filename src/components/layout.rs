@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_i18n::t;
+use dioxus_i18n::tid;
 
 use super::{Direction, HorizontalDirection};
 use crate::{
@@ -34,19 +34,12 @@ pub fn Layout() -> Element {
 	};
 	rsx! {
 		if sidenav {
-			aside {
-				class: if alt_dir { "right" } else { "left" },
-				Navbar {}
-			}
+			aside { class: if alt_dir { "right" } else { "left" }, Navbar {} }
 		} else {
 			if alt_dir {
-				footer {
-					Navbar {}
-				}
+				footer { Navbar {} }
 			} else {
-				header {
-					Navbar {}
-				}
+				header { Navbar {} }
 			}
 		}
 		main { class: "container-fluid", Outlet::<Route> {} }
@@ -64,30 +57,23 @@ pub fn LayoutPicker() -> Element {
 		(Direction::Vertical(VerticalDirection::Down), "arrow_downward"),
 	];
 	rsx! {
-		details {
-			class: "dropdown",
-			summary {
-				class: "outline",
-				role: "button",
-				Icon {
-					name: "menu_open"
-				}
-				{ " " }
-				span { {t!("menu-side", selector: "true", side: nav_side.as_str())} }
-			},
+		details { class: "dropdown",
+			summary { class: "outline", role: "button",
+				Icon { name: "menu_open" }
+				{" "}
+				span { {tid!("menu-side", selector : "true", side : nav_side.as_str())} }
+			}
 			ul {
-				for (direction, icon_name) in directions.clone() {
+				for (direction , icon_name) in directions.clone() {
 					li {
 						a {
 							aria_current: direction == nav_side,
-							href: "#",
 							onclick: move |_| {
-								config_signal.write().nav_side = direction;
+							    config_signal.write().nav_side = direction;
 							},
-							Icon {
-								name: icon_name
-							}
-							{t!("menu-side", side: direction.as_str())} }
+							Icon { name: icon_name }
+							{tid!("menu-side", selector : "false", side : direction.as_str())}
+						}
 					}
 				}
 			}

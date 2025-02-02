@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_i18n::t;
+use dioxus_i18n::tid;
 
 use crate::components::{LanguagePicker, LayoutPicker};
 
@@ -7,12 +7,10 @@ use crate::components::{LanguagePicker, LayoutPicker};
 pub fn Settings() -> Element {
 	rsx! {
 		section {
-			h1 { { t!("settings") } }
+			h1 { {tid!("settings")} }
 
-				LanguagePicker {
-					compact: false
-				}
-				LayoutPicker { }
+			LanguagePicker { compact: false }
+			LayoutPicker {}
 		}
 	}
 }

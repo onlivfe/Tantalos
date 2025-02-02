@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_i18n::t;
+use dioxus_i18n::tid;
 use dioxus_router::components::Link;
 
 use crate::{Route, components::Icon};
@@ -9,9 +9,9 @@ const HEADER_SVG: Asset = asset!("/res/icons/icon.svg");
 #[component]
 pub fn Navbar() -> Element {
 	let routes = vec![
-		(t!("accounts"), "manage_accounts", Route::Accounts {}),
-		(t!("settings"), "settings", Route::Settings {}),
-		(t!("info"), "info", Route::Info {}),
+		(tid!("accounts"), "manage_accounts", Route::Accounts {}),
+		(tid!("settings"), "settings", Route::Settings {}),
+		(tid!("info"), "info", Route::Info {}),
 	];
 
 	rsx! {
@@ -38,7 +38,7 @@ pub fn Navbar() -> Element {
 						class: "outline secondary",
 						rel: "external",
 						href: "https://onlivfe.com",
-						title: "Learn about Onlivfe",
+						title: tid!("to-project-url"),
 						img { src: HEADER_SVG, id: "header" }
 					}
 				}

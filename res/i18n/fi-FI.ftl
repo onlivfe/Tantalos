@@ -10,7 +10,7 @@ language = { $selector ->
     [en-US] Englannin kieli (English)
     [fi-FI] Suomen kieli
 }
-menu-side = {$selector ->
+menu-side = { $selector ->
     [true] Valikon sijainti:
    *[false] {""}
 } {$side ->

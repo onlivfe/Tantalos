@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_i18n::unic_langid::{LanguageIdentifier, langid as langId};
-use dioxus_i18n::{prelude::*, t};
+use dioxus_i18n::{prelude::*, tid};
 
 use super::VerticalDirection;
 use crate::components::Icon;
@@ -13,10 +13,11 @@ pub fn i18n_config() -> (Vec<LanguageIdentifier>, I18nConfig) {
 		($lang_id:literal) => {
 			(
 				langId!($lang_id),
-				Locale::new_static(
-					langId!($lang_id),
-					include_str!(concat!("../../res/i18n/", $lang_id, ".ftl")),
-				),
+				LocaleResource::from(include_str!(concat!(
+					"../../res/i18n/",
+					$lang_id,
+					".ftl"
+				))),
 			)
 		};
 	}
@@ -33,11 +34,12 @@ pub fn i18n_config() -> (Vec<LanguageIdentifier>, I18nConfig) {
 
 	let langs_tuple = vec![lang!("en-US"), lang!("fi-FI")];
 
-	let mut i18n = I18nConfig::new(langId!("fi-FI"));
+	let mut i18n =
+		I18nConfig::new(langId!("en-US")).with_fallback(langId!("en-US"));
 
 	let mut lang_ids = Vec::with_capacity(langs_tuple.len());
-	for (lang_id, locale) in langs_tuple {
-		i18n = i18n.with_locale(locale);
+	for (lang_id, locale_res) in langs_tuple {
+		i18n = i18n.with_locale((lang_id.clone(), locale_res));
 		lang_ids.push(lang_id);
 	}
 
@@ -61,31 +63,25 @@ pub fn LanguagePicker(
 		i18n_config.languages.iter().map(|l| (l.clone(), format!("{l}"))).collect();
 
 	rsx! {
-		details {
-			class: "dropdown",
-			summary {
-				class: "outline",
-				role: "button",
+		details { class: "dropdown",
+			summary { class: "outline", role: "button",
 				span {
-					Icon {
-						name: "language"
-					}
+					Icon { name: "language" }
 					if !compact {
-						{ " " }
-						{t!("language", selector: "true", lang: i18n.language().to_string())}
+						{" "}
+						{tid!("language", selector : "true", lang : i18n.language().to_string())}
 					}
 				}
-			},
+			}
 			ul {
 				position: if open_direction == VerticalDirection::Down { None } else { Some("absolute") },
 				bottom: if open_direction == VerticalDirection::Down { None } else { Some("100%") },
 				for (lang_id , as_str) in languages.clone() {
 					li {
 						a {
-							href: "#",
 							aria_current: i18n.language() == lang_id,
 							onclick: move |_| i18n.set_language(lang_id.clone()),
-							{t!("language", lang: &as_str)}
+							{tid!("language", selector : "false", lang : & as_str)}
 						}
 					}
 				}

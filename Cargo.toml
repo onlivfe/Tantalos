@@ -18,7 +18,7 @@ mobile = ["dioxus/mobile"]
 
 dioxus = { version = "0.6.2", features = ["router", "fullstack"] }
 #dioxus-sdk = { version = "0.6.0", features = [] }
-dioxus-i18n = { version = "0.3.0", features = [] }
+dioxus-i18n = { version = "0.4.1", features = [] }
 #dioxus-lazy = { version = "0.3.0", features = [] }
 # dioxus-use-computed
 # dioxus-query

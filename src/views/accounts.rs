@@ -1,137 +1,175 @@
-use dioxus::{html::h2, prelude::*};
-use dioxus_i18n::t;
+use dioxus::prelude::*;
+use dioxus_i18n::tid;
+use onlivfe::{LoginCredentials, PlatformType, cvr, resonite, vrchat};
 
 //const LOGIN_CSS: Asset = asset!("/res/css/login.css");
+
+fn default_login_credentials(platform: PlatformType) -> LoginCredentials {
+	match platform {
+		PlatformType::VRChat => LoginCredentials::VRChat(Box::new(
+			vrchat::LoginRequestPart::LoginRequest(vrchat::query::Authenticating {
+				username: String::new(),
+				password: String::new(),
+			}),
+		)),
+		PlatformType::ChilloutVR => {
+			LoginCredentials::ChilloutVR(Box::new(cvr::query::LoginCredentials {
+				email: String::new(),
+				password: String::new(),
+			}))
+		}
+		PlatformType::Resonite => LoginCredentials::Resonite(Box::new(
+			resonite::query::UserSessionQueryWithHeaders {
+				body: resonite::query::UserSession {
+					authentication: resonite::query::UserSessionAuthentication::Password(
+						resonite::query::UserSessionPasswordAuthentication {
+							password: String::new(),
+							recovery_code: None,
+						},
+					),
+					identifier: resonite::query::LoginCredentialsIdentifier::Email(
+						String::new(),
+					),
+					remember_me: true,
+					secret_machine_id: String::new(),
+				},
+				data: resonite::query::Authenticating {
+					second_factor: None,
+					unique_machine_identifier: String::new(),
+				},
+			},
+		)),
+	}
+}
 
 #[component]
 pub fn Accounts() -> Element {
 	use strum::VariantNames;
 
 	let mut totp_enabled = use_signal(|| true);
-	let mut response = use_signal(String::new);
-	let mut selected_platform = use_signal(|| onlivfe::PlatformType::VRChat);
+	let mut login_processing = use_signal(|| false);
+	let mut login_data =
+		use_signal(|| default_login_credentials(PlatformType::VRChat));
 
-	let accounts_len = 0;
+	let selected_platform = use_memo(move || login_data().platform());
 
+	let accounts_len = use_signal(|| 0);
+
+	let login_request = use_resource(move || async move {
+		if !login_processing() {
+			return None;
+		}
+		let creds = login_data();
+		Some(login_server(creds).await)
+	});
+
+	use_effect(move || {
+		if login_request().is_some() && login_processing() {
+			println!("Login request done, resetting");
+			*login_processing.write() = false;
+		}
+	});
+
+	let form_disable = use_memo(move || {
+		login_processing() || (login_request.state() == UseResourceState::Pending)
+	});
 
 	// TODO: Translate
 	rsx! {
 		section { id: "login",
 
 			// Content
-			h1 { { t!("accounts") } }
+			h1 { {tid!("accounts")} }
 
-			p {  {t!("logged-in-accounts-count", count: accounts_len)} }
+			p { {tid!("logged-in-accounts-count", count : accounts_len())} }
 
 			section {
-				h2 { "Add account"}
+				h2 { {tid!("add-account")} }
 
 				form {
-					fieldset {
-						role: "group",
+					onsubmit: move |e| {
+					    e.prevent_default();
+					    *login_processing.write() = true;
+					},
+					fieldset { role: "group", disabled: form_disable(),
 						select {
 							name: "platform",
-							aria_label: "Select platform",
+							aria_label: tid!("select-platform-type"),
 							for platform in onlivfe::platforms() {
 								option {
 									selected: selected_platform() == platform,
 									onclick: move |_| async move {
-											selected_platform.set(platform);
+									    login_data.set(default_login_credentials(platform));
 									},
-									{ platform.as_ref() }
+									{tid!(& platform.as_ref().to_ascii_lowercase())}
 								}
 							}
-						},
+						}
 						if selected_platform() == onlivfe::PlatformType::Resonite {
 							select {
 								name: "identifier-type",
-								aria_label: "Identifier type",
+								aria_label: tid!("select-identifier-type"),
 								disabled: true,
 								for id_type in onlivfe::resonite::query::LoginCredentialsIdentifier::VARIANTS {
-									option {
-										selected: id_type == &"Email",
-										{ id_type }
+									option { selected: id_type == &"Email",
+										{tid!(& id_type.to_ascii_lowercase())}
 									}
 								}
-							},
+							}
 						} else {
 							select {
 								name: "identifier-type",
 								aria_label: "Identifier type",
 								disabled: true,
-								option {
-									{ "Email" }
-								}
-							},
+								option { {tid!("email")} }
+							}
 						}
 					}
-					fieldset {
-						role: "group",
+					fieldset { role: "group", disabled: form_disable(),
 						input {
 							name: "user",
 							autocomplete: "email",
 							required: true,
-							type: "email",
-							placeholder: "Email"
-						},
+							r#type: "email",
+							placeholder: tid!("email"),
+						}
 						input {
 							name: "password",
-							type: "password",
+							r#type: "password",
 							required: true,
-							placeholder: "Password"
-						},
+							placeholder: tid!("password"),
+						}
 					}
-					fieldset {
-						role: "group",
-						label {
-							width: "fit-content",
-							text_wrap: "nowrap",
+					fieldset { role: "group", disabled: form_disable(),
+						label { width: "fit-content", text_wrap: "nowrap",
 							input {
-								type: "checkbox",
+								r#type: "checkbox",
 								checked: totp_enabled(),
 								role: "switch",
 								onclick: move |_| async move {
-									totp_enabled.set(!totp_enabled());
+								    totp_enabled.set(!totp_enabled());
 								},
-							},
-							{ "Use TOTP" }
+							}
+							{tid!("enable-totp")}
 						}
 						if totp_enabled() {
 							input {
 								name: "totp",
-								type: "number",
+								r#type: "number",
 								min: 0,
 								max: 999999,
 								step: 1,
 								required: true,
 								pattern: "\\d{6}",
-								placeholder: "TOTP"
-							},
+								placeholder: tid!("totp"),
+							}
 						}
 						button {
-							type: "submit",
-							aria_busy: true,
-							disabled: true,
-							{ "Log in" }
+							r#type: "submit",
+							width: "100%",
+							aria_busy: form_disable(),
+							{tid!("login")}
 						}
-					}
-				}
-			}
-
-			div { id: "echo",
-				h4 { "ServerFn Echo" }
-				input {
-					placeholder: "Type here to echo...",
-					oninput: move |event| async move {
-							let data = login_server(event.value()).await.unwrap();
-							response.set(data);
-					},
-				}
-
-				if !response().is_empty() {
-					p {
-						"Server echoed: "
-						i { "{response}" }
 					}
 				}
 			}
@@ -141,6 +179,7 @@ pub fn Accounts() -> Element {
 
 /// Echo the user input on the server.
 #[server(LoginServer)]
-async fn login_server(input: String) -> Result<String, ServerFnError> {
-	Ok(input.clone() + &input)
+async fn login_server(creds: LoginCredentials) -> Result<(), ServerFnError> {
+	eprintln!("Req!");
+	Ok(())
 }

@@ -74,7 +74,9 @@ fn App() -> Element {
 	use_context_provider(ColorScheme::default);
 	use_context_provider(|| Signal::new(LayoutConfig::default()));
 
-	document::eval(r#"document.documentElement.setAttribute('data-theme', 'dark')"#);
+	document::eval(
+		r#"document.documentElement.setAttribute('data-theme', 'dark')"#,
+	);
 	rsx! {
 		// Global app resources
 		document::Link { rel: "icon", href: FAVICON }
