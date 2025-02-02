@@ -191,3 +191,11 @@ nav {
 		}
 	}
 }
+
+[role="group"],
+[role="search"] {
+	align-items: baseline;
+	label {
+		margin: 0 1rem;
+	}
+}

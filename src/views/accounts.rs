@@ -89,12 +89,19 @@ pub fn Accounts() -> Element {
 							input {
 								name: "totp",
 								type: "number",
+								min: 0,
+								max: 999999,
+								step: 1,
+								required: true,
+								pattern: "\\d{6}",
 								placeholder: "TOTP"
 							},
 						}
-						input {
+						button {
 							type: "submit",
-							value: "Log in"
+							aria_busy: true,
+							disabled: true,
+							{ "Log in" }
 						}
 					}
 				}
