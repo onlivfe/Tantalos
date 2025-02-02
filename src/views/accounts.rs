@@ -46,10 +46,21 @@ pub fn Accounts() -> Element {
 							select {
 								name: "identifier-type",
 								aria_label: "Identifier type",
+								disabled: true,
 								for id_type in onlivfe::resonite::query::LoginCredentialsIdentifier::VARIANTS {
 									option {
+										selected: id_type == &"Email",
 										{ id_type }
 									}
+								}
+							},
+						} else {
+							select {
+								name: "identifier-type",
+								aria_label: "Identifier type",
+								disabled: true,
+								option {
+									{ "Email" }
 								}
 							},
 						}
@@ -60,8 +71,8 @@ pub fn Accounts() -> Element {
 							name: "user",
 							autocomplete: "email",
 							required: true,
-							type: "text",
-							placeholder: "Log in"
+							type: "email",
+							placeholder: "Email"
 						},
 						input {
 							name: "password",
