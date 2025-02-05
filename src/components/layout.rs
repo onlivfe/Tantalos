@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_i18n::tid;
 
 use super::{Direction, HorizontalDirection};
+use crate::tid;
 use crate::{
 	Route,
 	components::{Icon, Navbar, VerticalDirection},

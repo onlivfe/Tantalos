@@ -10,6 +10,9 @@ default_platform = "desktop"
 
 # HTML title tag content
 title = "Tantalos"
+
+[web.watcher]
+reload_html = true
 watch_path = ["src", "res"]
 
 

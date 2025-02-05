@@ -1,10 +1,8 @@
 {
 	"rust-analyzer.cargo.features": "all",
-	"editor.formatOnSave": true,
+	"editor.formatOnSave": false,
 	"rust-analyzer.diagnostics.experimental.enable": true,
 	"rust-analyzer.assist.emitMustUse": true,
-	"rust-analyzer.check.command": "clippy",
-	"rust-analyzer.check.features": "all",
 	"[rust]": {
 		"editor.defaultFormatter": "rust-lang.rust-analyzer"
 	},
@@ -14,5 +12,27 @@
 	},
 	"files.associations": {
 		".ftl": "ftl",
-	}
+	},
+	"rust-analyzer.check.extraEnv": {
+		"RUSTUP_TOOLCHAIN": "nightly"
+	},
+	"rust-analyzer.server.extraEnv": {
+		"RUSTUP_TOOLCHAIN": "nightly"
+	},
+	"rust-analyzer.cargo.extraEnv": {
+		"RUSTUP_TOOLCHAIN": "nightly"
+	},
+	"rust-analyzer.runnables.extraEnv": {
+		"RUSTUP_TOOLCHAIN": "nightly"
+	},
+	"rust-analyzer.check.command": "clippy",
+	"rust-analyzer.check.features": "all",
+	"cSpell.words": [
+		"fieldset",
+		"hgroup",
+		"onchange",
+		"onclick",
+		"oninput",
+		"onsubmit"
+	]
 }

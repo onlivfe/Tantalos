@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
-use dioxus_i18n::tid;
+
+use crate::tid;
 
 #[component]
 pub fn Info() -> Element {
@@ -7,7 +8,7 @@ pub fn Info() -> Element {
 		section {
 			h1 { {concat!("Tantalos v", env!("CARGO_PKG_VERSION"))} }
 
-			p { {tid!("placeholder-text")} }
+			p { {tid!("about-app")} }
 			p { {tid!("placeholder-text")} }
 			p { {tid!("placeholder-text")} }
 			p { {tid!("placeholder-text")} }

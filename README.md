@@ -44,3 +44,4 @@ If a locale is missing, create a new file and submit the changes.
 ## License
 
 TBD, most like AGPL. In the meanwhile, I at least grant you the permission to view and redistribute the source code as-is, without any warranty. Do remember that you still need to follow the dep crates' licenses too.
+If you are actually interested in contributing, let me know and I'll plonk down a proper license.

@@ -1,12 +1,11 @@
 use dioxus::prelude::*;
+use dioxus_i18n::prelude::*;
 use dioxus_i18n::unic_langid::{LanguageIdentifier, langid as langId};
-use dioxus_i18n::{prelude::*, tid};
 
 use super::VerticalDirection;
 use crate::components::Icon;
+use crate::tid;
 
-//const LANGUAGES: &[LanguageIdentifier] = &[langId!("en-US"),
-// langId!("fi-FI")];
 pub fn i18n_config() -> (Vec<LanguageIdentifier>, I18nConfig) {
 	//#[cfg(not(debug_assertions))]
 	macro_rules! lang {
@@ -21,21 +20,12 @@ pub fn i18n_config() -> (Vec<LanguageIdentifier>, I18nConfig) {
 			)
 		};
 	}
-	// Seems broken currently :/
-	/*#[cfg(debug_assertions)]
-	macro_rules! lang {
-		($lang_id:literal) => {
-			Locale::new_dynamic(
-				id!($lang_id),
-				concat!("../../res/i18n/", $lang_id, ".ftl"),
-			)
-		};
-	}*/
 
 	let langs_tuple = vec![lang!("en-US"), lang!("fi-FI")];
 
 	let mut i18n =
-		I18nConfig::new(langId!("en-US")).with_fallback(langId!("en-US"));
+		I18nConfig::new(langId!("en-US")).with_fallback(langId!("en-Zyyy"))
+		.with_locale(lang!("en-Zyyy"));
 
 	let mut lang_ids = Vec::with_capacity(langs_tuple.len());
 	for (lang_id, locale_res) in langs_tuple {

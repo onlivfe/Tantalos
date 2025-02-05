@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_i18n::tid;
 
 use crate::components::{LanguagePicker, LayoutPicker};
+use crate::tid;
 
 #[component]
 pub fn Settings() -> Element {

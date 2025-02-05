@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use dioxus_i18n::tid;
 use dioxus_router::components::Link;
 
+use crate::tid;
 use crate::{Route, components::Icon};
 
 const HEADER_SVG: Asset = asset!("/res/icons/icon.svg");
@@ -9,6 +9,7 @@ const HEADER_SVG: Asset = asset!("/res/icons/icon.svg");
 #[component]
 pub fn Navbar() -> Element {
 	let routes = vec![
+		(tid!("dashboard"), "dashboard", Route::Dashboard {}),
 		(tid!("accounts"), "manage_accounts", Route::Accounts {}),
 		(tid!("settings"), "settings", Route::Settings {}),
 		(tid!("info"), "info", Route::Info {}),
@@ -37,6 +38,7 @@ pub fn Navbar() -> Element {
 						role: "button",
 						class: "outline secondary",
 						rel: "external",
+						target: "_blank",
 						href: "https://onlivfe.com",
 						title: tid!("to-project-url"),
 						img { src: HEADER_SVG, id: "header" }

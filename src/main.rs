@@ -9,10 +9,22 @@ use std::borrow::Cow;
 use components::{I18nConf, Layout, LayoutConfig, i18n_config};
 use dioxus::prelude::*;
 use dioxus_i18n::prelude::use_init_i18n;
-use views::{Accounts, Info, Settings};
+use tracing::{info, warn};
+use views::{Accounts, Dashboard, Info, Settings};
 
 mod components;
 mod views;
+
+#[macro_export]
+macro_rules! tid {
+	($id:expr, $( $name:ident : $value:expr ),* ) => {
+			dioxus_i18n::te!($id, $( $name : $value ),*).unwrap_or_else(|_|"␂".to_owned() + $id)
+	};
+
+	($id:expr ) => {{
+			dioxus_i18n::te!($id).unwrap_or_else(|_|"␂".to_owned() + $id)
+	}};
+}
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 enum Route {
@@ -20,27 +32,42 @@ enum Route {
 	#[redirect("/", || Route::Info)]
 	#[route("/info")]
 	Info,
+	#[route("/dashboard")]
+	Dashboard,
 	#[route("/accounts")]
 	Accounts,
 	#[route("/settings")]
 	Settings,
 }
 
+#[cfg(feature = "server")]
+pub type Onlivfe = std::sync::Arc<onlivfe_wrapper::Onlivfe<onlivfe_wrapper::onlivfe_cache_store::OnlivfeCacheStorageBackend>>;
+
 const FAVICON: Asset = asset!("/res/icons/favicon.ico");
 const MAIN_CSS: Asset = asset!("/res/css/main.css");
 
+const APP_NAME: &str = "Tantalos";
+
 fn main() {
-	#[cfg(not(target_arch = "wasm32"))]
-	onlivfe_wrapper::init("Tantalos", env!("CARGO_PKG_VERSION")).unwrap();
+	#[cfg(feature = "server")]
+	onlivfe_wrapper::init(APP_NAME, env!("CARGO_PKG_VERSION")).unwrap();
 
-	#[cfg(all(not(feature = "web"), not(feature = "mobile")))]
-	let config = ();
-	#[cfg(all(not(feature = "web"), feature = "mobile"))]
-	let config = dioxus::mobile::Config::new();
+	let config = dioxus::LaunchBuilder::new();
+	
+	#[cfg(feature = "server")]
+	let config = config.with_context_provider(
+		|| Box::new(Onlivfe::new(onlivfe_wrapper::Onlivfe::new(
+			onlivfe_wrapper::onlivfe_cache_store::OnlivfeCacheStorageBackend::new(APP_NAME).expect("Creating backend cache store to succeed")
+		).expect("Creating backend Onlivfe to succeed")))
+	);
+	
 	#[cfg(feature = "web")]
-	let config = { dioxus::web::Config::new().hydrate(true) };
+	let config = config.with_cfg(dioxus::web::Config::new().hydrate(true));
 
-	dioxus::LaunchBuilder::new().with_cfg(config).launch(App);
+	#[cfg(feature = "server")]
+	info!("Server started");
+
+	config.launch(App);
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -73,14 +100,28 @@ fn App() -> Element {
 	use_context_provider(|| I18nConf { languages });
 	use_context_provider(ColorScheme::default);
 	use_context_provider(|| Signal::new(LayoutConfig::default()));
+	
+	let _auth_ok = use_resource(ensure_authenticated);
 
 	document::eval(
 		r#"document.documentElement.setAttribute('data-theme', 'dark')"#,
 	);
 	rsx! {
+		document::Style { {"html { background: black; }"} }
 		// Global app resources
 		document::Link { rel: "icon", href: FAVICON }
 		document::Link { rel: "stylesheet", href: MAIN_CSS }
 		Router::<Route> {}
 	}
+}
+
+
+#[server(EnsureAuthenticated)]
+async fn ensure_authenticated() -> Result<(), ServerFnError> {
+	let FromContext(onlivfe): FromContext<crate::Onlivfe> = extract().await?;
+	let res = onlivfe.re_authenticate(false).await;
+	if let Err(err) = &res {
+		tracing::warn!("Reauthenticating failed for {err:?}");
+	}
+	Ok(())
 }

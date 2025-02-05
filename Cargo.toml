@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["LJ"]
 edition = "2021"
 license = "LicenseRef-UNLICENSED"
+build = "src/build.rs"
 
 [features]
 default = []
@@ -13,6 +14,7 @@ web = [
 ]
 desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
+server = ["dioxus/server", "onlivfe_wrapper"]
 
 [dependencies]
 
@@ -32,10 +34,11 @@ tracing = { version = "0.1.41", features = ["attributes", "log"] }
 
 onlivfe = { path = "../core/onlivfe" }
 strum = "0.26.3"
-[target.'cfg(not(target_arch = "wasm32"))'.dependencies.onlivfe_wrapper]
+[dependencies.onlivfe_wrapper]
 path = "../core/onlivfe_wrapper"
 #git = "https://github.com/onlivfe/core.git"
 default-features = false
+optional = true
 
 [profile]
 
